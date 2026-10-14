@@ -236,6 +236,18 @@ p { margin: 0 0 1rem; max-width: 62ch; }
   object-fit: cover;
 }
 
+.game-media-empty {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  color: var(--ink);
+  font-weight: 650;
+  background-image:
+    linear-gradient(rgb(255 255 255 / 0.25) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 0.25) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
 .game h3 { margin-top: 0.9rem; }
 
 .game-tags {
@@ -262,6 +274,42 @@ p { margin: 0 0 1rem; max-width: 62ch; }
   color: var(--muted);
 }
 .empty p { margin: 0; }
+
+/* ---------- Builds ---------- */
+
+.section-intro { color: var(--muted); margin-top: -1rem; }
+
+.builds {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 30rem), 1fr));
+  gap: 2rem 1.5rem;
+}
+
+.build { margin: 0; }
+.build img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border: 2px solid var(--black);
+  background: var(--medium-stone-grey);
+}
+.build figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.5rem;
+  margin-top: 0.75rem;
+}
+.build strong { font-weight: 750; }
+.build-note {
+  padding: 0.05rem 0.5rem;
+  background: var(--bright-yellow);
+  border: 1px solid var(--black);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
 
 /* ---------- Commissions ---------- */
 

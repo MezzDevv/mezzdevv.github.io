@@ -2,9 +2,16 @@
   "games": [
     {
       "placeId": "139369528722370",
+      "title": "Pull a Planet",
       "status": "Live",
       "duo": true,
-      "title": "Pull a Planet"
+      "role": ["Full-stack scripting", "Modelling", "VFX", "Animation"]
+    },
+    {
+      "title": "Anything Arena",
+      "status": "In the works",
+      "duo": true,
+      "blurb": "A first-person arena shooter."
     }
   ]
 }

@@ -5,9 +5,10 @@ const load = (path) =>
     .then((r) => (r.ok ? r.json() : null))
     .catch(() => null);
 
-const [site, games, roblox] = await Promise.all([
+const [site, games, builds, roblox] = await Promise.all([
   load("data/site.json"),
   load("data/games.json"),
+  load("data/builds.json"),
   load("data/roblox.json"),
 ]);
 
@@ -107,11 +108,13 @@ function renderGame(g) {
   const image = g.screenshots?.[0] || live.thumbnails?.[0] || live.icon;
   const url = g.url || live.url;
   const status = g.status || "In development";
+  const isLive = status === "Live";
+  const roles = [g.role ?? []].flat();
 
   const tags = [
-    el("li", { class: status === "In development" ? "is-dev" : null }, status),
+    el("li", { class: isLive ? null : "is-dev" }, status),
     g.duo ? el("li", {}, "Duo project") : null,
-    g.role ? el("li", {}, g.role) : null,
+    ...roles.map((r) => el("li", {}, r)),
   ];
 
   const stats = [];
@@ -120,14 +123,31 @@ function renderGame(g) {
 
   return el("article", { class: "game" },
     el("div", { class: "game-media" },
-      image ? el("img", { src: image, alt: `${title} screenshot`, loading: "lazy" }) : null),
+      image
+        ? el("img", { src: image, alt: `${title} screenshot`, loading: "lazy" })
+        : el("span", { class: "game-media-empty" }, "Screenshots soon")),
     el("h3", {}, title),
     el("ul", { class: "game-tags" }, tags),
     g.blurb ? el("p", {}, g.blurb) : null,
     stats.length ? el("p", { class: "game-stats" }, stats.join(", ")) : null,
-    url && status !== "In development" ? el("a", { href: url }, `Play ${title} on Roblox`) : null
+    url && isLive ? el("a", { href: url }, `Play ${title} on Roblox`) : null
   );
 }
+
+// ---------- Builds ----------
+
+const shownBuilds = builds?.builds ?? [];
+$("builds-section").hidden = shownBuilds.length === 0;
+$("builds").replaceChildren(
+  ...shownBuilds.map((b) =>
+    el("figure", { class: "build" },
+      el("img", { src: b.image, alt: b.alt || b.title, loading: "lazy" }),
+      el("figcaption", {},
+        el("strong", {}, b.title),
+        b.game ? ` for ${b.game}` : null,
+        b.note ? el("span", { class: "build-note" }, b.note) : null))
+  )
+);
 
 // ---------- Commissions ----------
 

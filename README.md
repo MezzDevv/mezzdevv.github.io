@@ -8,6 +8,7 @@ Static site for GitHub Pages. No build step. Everything you edit lives in `data/
 |---|---|
 | `data/site.json` | Name, tagline, commission status, links |
 | `data/games.json` | Games shown on the page |
+| `data/builds.json` | Map screenshots for the Builds section (hidden when empty) |
 | `data/counted-games.json` | Extra games that count toward total visits but aren't shown |
 | `data/roblox.json` | **Generated. Don't edit.** Visits, player counts, Roblox thumbnails |
 | `media/` | Your own screenshots (Studio shots of in-development games) |
@@ -31,8 +32,20 @@ Static site for GitHub Pages. No build step. Everything you edit lives in `data/
 
 - `placeId` is the number in the game's Roblox URL. Title, visits and thumbnails come
   from Roblox automatically. Set `"title"` to override the name.
-- `status`: `"In development"` hides the Play link. Anything else (e.g. `"Live"`) shows it.
+- `status`: only `"Live"` shows the Play link. Anything else (`"In the works"`,
+  `"In development"`) gets a yellow tag and no link.
+- `role` is one string or a list; each item becomes a tag.
+- `placeId` is optional for unreleased games; the card then shows "Screenshots soon"
+  unless you add `screenshots`.
 - `screenshots` is optional. Without it the Roblox thumbnail is used.
+
+### Add a map to Builds
+
+```json
+{ "title": "Main map", "game": "Game name", "note": "Coming soon", "image": "media/map.webp", "alt": "What the map shows" }
+```
+
+`game` and `note` are optional.
 
 ### Count a game's visits without showing it
 
