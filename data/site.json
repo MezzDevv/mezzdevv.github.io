@@ -1,0 +1,15 @@
+{
+  "name": "Mezz",
+  "tagline": "I build Roblox games: gameplay systems, scripting, 3D and effects.",
+  "commissions": {
+    "open": true,
+    "note": "Taking scripting and gameplay commissions. Message me on Discord with what you need and your timeline."
+  },
+  "links": [
+    { "label": "Roblox profile", "url": "https://www.roblox.com/users/PLACEHOLDER/profile" },
+    { "label": "Roblox group", "url": "https://www.roblox.com/communities/PLACEHOLDER" },
+    { "label": "Discord", "url": "https://discord.com/users/PLACEHOLDER", "handle": "PLACEHOLDER" },
+    { "label": "X", "url": "https://x.com/PLACEHOLDER" },
+    { "label": "Email", "url": "mailto:PLACEHOLDER@example.com" }
+  ]
+}

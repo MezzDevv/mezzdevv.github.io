@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mezz, Roblox developer</title>
+  <meta name="description" content="Mezz builds Roblox games: gameplay systems, full-stack Luau scripting, building, Blender modelling and VFX.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="baseplate">
+    <div class="wrap hero">
+      <h1 class="name" id="name">Mezz</h1>
+      <p class="tagline" id="tagline">I build Roblox games: gameplay systems, scripting, 3D and effects.</p>
+
+      <div class="part" id="visits" aria-live="polite">
+        <span class="part-number" id="visits-number">0</span>
+        <span class="part-label" id="visits-label">visits across games I've worked on</span>
+      </div>
+
+      <nav class="hero-links" id="hero-links" aria-label="Profiles"></nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="wrap section" aria-labelledby="skills-h">
+      <h2 id="skills-h">What I do</h2>
+      <div class="skills">
+        <article class="skill skill-lead">
+          <h3>Gameplay systems and full-stack Luau</h3>
+          <p>Core mechanics and features from first prototype to live game: combat, tools, progression, tycoon and simulator loops.</p>
+          <ul>
+            <li>Server and client architecture</li>
+            <li>DataStores and player data</li>
+            <li>Monetization: game passes, developer products</li>
+            <li>Economies and progression tuning</li>
+          </ul>
+        </article>
+        <article class="skill">
+          <h3>3D</h3>
+          <p>Building in Studio and modelling in Blender: maps, props and the pieces gameplay needs.</p>
+        </article>
+        <article class="skill">
+          <h3>Visual</h3>
+          <p>VFX, gameplay animation for R6 and R15, and game UI: HUDs, shops and menus.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="wrap section" aria-labelledby="games-h">
+      <h2 id="games-h">Games</h2>
+      <div class="games" id="games"></div>
+    </section>
+
+    <section class="wrap section" aria-labelledby="log-h">
+      <h2 id="log-h">Growth log</h2>
+      <ol class="log" id="log"></ol>
+    </section>
+
+    <section class="wrap section contact" aria-labelledby="contact-h">
+      <h2 id="contact-h">Commissions</h2>
+      <p class="contact-status" id="commission-status"></p>
+      <p class="contact-note" id="commission-note"></p>
+      <ul class="contact-links" id="contact-links"></ul>
+    </section>
+  </main>
+
+  <footer class="wrap footer">
+    <p id="updated"></p>
+  </footer>
+
+  <script src="main.js" type="module"></script>
+</body>
+</html>
