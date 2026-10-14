@@ -5,10 +5,9 @@ const load = (path) =>
     .then((r) => (r.ok ? r.json() : null))
     .catch(() => null);
 
-const [site, games, log, roblox] = await Promise.all([
+const [site, games, roblox] = await Promise.all([
   load("data/site.json"),
   load("data/games.json"),
-  load("data/log.json"),
   load("data/roblox.json"),
 ]);
 
@@ -113,18 +112,6 @@ function renderGame(g) {
     url && status !== "In development" ? el("a", { href: url }, `Play ${title} on Roblox`) : null
   );
 }
-
-// ---------- Growth log ----------
-
-const entries = [...(log?.entries ?? [])].sort((a, b) => b.date.localeCompare(a.date));
-$("log").replaceChildren(
-  ...entries.map((e) =>
-    el("li", {},
-      el("time", { datetime: e.date }, dateFmt.format(new Date(e.date + "T00:00:00"))),
-      el("h3", {}, e.title),
-      e.body ? el("p", {}, e.body) : null)
-  )
-);
 
 // ---------- Commissions ----------
 

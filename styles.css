@@ -252,39 +252,6 @@ p { margin: 0 0 1rem; max-width: 62ch; }
 }
 .empty p { margin: 0; }
 
-/* ---------- Growth log ---------- */
-
-.log {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  border-left: 3px solid var(--ink);
-}
-
-.log li {
-  position: relative;
-  padding: 0 0 2rem 1.75rem;
-}
-.log li::before {
-  content: "";
-  position: absolute;
-  left: -9px;
-  top: 0.35rem;
-  width: 15px;
-  height: 15px;
-  background: var(--bright-yellow);
-  border: 2px solid var(--black);
-}
-.log time {
-  display: block;
-  color: var(--muted);
-  font-size: 0.9rem;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-}
-.log h3 { margin: 0.15rem 0 0.35rem; }
-.log p { margin: 0; }
-
 /* ---------- Commissions ---------- */
 
 .contact-status {

@@ -9,7 +9,6 @@ Static site for GitHub Pages. No build step. Everything you edit lives in `data/
 | `data/site.json` | Name, tagline, commission status, links |
 | `data/games.json` | Games shown on the page |
 | `data/counted-games.json` | Extra games that count toward total visits but aren't shown |
-| `data/log.json` | Growth log entries, newest sorted first automatically |
 | `data/roblox.json` | **Generated. Don't edit.** Visits, player counts, Roblox thumbnails |
 | `media/` | Your own screenshots (Studio shots of in-development games) |
 
@@ -38,12 +37,6 @@ Static site for GitHub Pages. No build step. Everything you edit lives in `data/
 ### Count a game's visits without showing it
 
 Add `{ "placeId": "1234567890" }` to `data/counted-games.json`.
-
-### Add a growth log entry
-
-```json
-{ "date": "2026-11-02", "title": "Shipped my first VFX pack", "body": "Optional detail." }
-```
 
 ## Visit counter
 
