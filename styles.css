@@ -76,7 +76,68 @@ a:hover { text-decoration-thickness: 2px; }
     linear-gradient(180deg, var(--sky-top), var(--sky-low));
 }
 
+/* Cloud buddy: an original sleepy cloud drifting in the sky. Click to wake it. */
+.buddy {
+  position: absolute;
+  top: clamp(1.5rem, 6vw, 4rem);
+  right: clamp(1rem, 8vw, 9rem);
+  width: clamp(5.5rem, 12vw, 9.5rem);
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  animation: drift 6s ease-in-out infinite;
+  z-index: 1;
+}
+.buddy svg { display: block; width: 100%; overflow: visible; }
+.buddy-body {
+  fill: #fff;
+  stroke: var(--black);
+  stroke-width: 4;
+  stroke-linejoin: round;
+}
+.buddy-eyes path,
+.buddy-mouth {
+  fill: none;
+  stroke: var(--black);
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+.buddy-cheek { fill: #f9b4c8; }
+.buddy:focus-visible { outline-offset: 6px; border-radius: 40%; }
+
+.buddy.is-awake svg { animation: wiggle 0.5s ease-in-out; }
+
+.buddy-say {
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  padding: 0.2rem 0.6rem;
+  border: 2px solid var(--black);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ink);
+  font: 600 0.85rem/1.3 var(--font);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+.buddy-say.is-showing { opacity: 1; }
+
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-10px, 8px); }
+}
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0); }
+  25% { transform: rotate(-8deg) scale(1.05); }
+  75% { transform: rotate(8deg) scale(1.05); }
+}
+
 .hero {
+  position: relative;
   padding-block: clamp(3.5rem, 10vw, 7rem) clamp(2.5rem, 6vw, 4rem);
 }
 
@@ -458,4 +519,6 @@ p { margin: 0 0 1rem; max-width: 62ch; }
   .build { transition: none; }
   .game:hover,
   .build:hover { transform: none; }
+  .buddy,
+  .buddy.is-awake svg { animation: none; }
 }

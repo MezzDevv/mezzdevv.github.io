@@ -93,6 +93,23 @@ if (total > 0) {
   $("visits-label").textContent = "Visit count updates once games are added";
 }
 
+// ---------- Cloud buddy ----------
+
+const buddyLines = ["zzz…", "hi!", "five more minutes", "*yawn*", "go play Pull a Planet", "☁️"];
+let buddyIndex = 0;
+let buddyTimer;
+$("buddy").addEventListener("click", () => {
+  const buddy = $("buddy");
+  const say = $("buddy-say");
+  buddy.classList.remove("is-awake");
+  void buddy.offsetWidth; // restart the wiggle
+  buddy.classList.add("is-awake");
+  say.textContent = buddyLines[buddyIndex++ % buddyLines.length];
+  say.classList.add("is-showing");
+  clearTimeout(buddyTimer);
+  buddyTimer = setTimeout(() => say.classList.remove("is-showing"), 1600);
+});
+
 // ---------- Games ----------
 
 const shown = games?.games ?? [];
