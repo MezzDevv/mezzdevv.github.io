@@ -406,6 +406,84 @@ p { margin: 0 0 1rem; max-width: 62ch; }
 }
 .empty p { margin: 0; }
 
+/* ---------- Workshop ---------- */
+
+.workshop-lead {
+  font-size: clamp(1.1rem, 1.8vw, 1.25rem);
+  line-height: 1.5;
+  max-width: 60ch;
+}
+
+/* The pipeline is a real sequence, so the bricks are numbered in order. */
+.pipeline {
+  display: grid;
+  grid-template-columns: 0.7fr 1.2fr 1.2fr 1.2fr 0.7fr;
+  gap: 0.75rem 1.75rem;
+  margin: 2rem 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+.pipeline li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0.75rem 1rem;
+  background: var(--paper);
+  border: 2px solid var(--black);
+  border-radius: var(--radius);
+  box-shadow: 4px 4px 0 var(--black);
+  counter-increment: step;
+}
+.pipeline li::before {
+  content: counter(step);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+/* Connector to the next brick. */
+.pipeline li + li::after {
+  content: "";
+  position: absolute;
+  right: calc(100% + 4px);
+  top: 50%;
+  width: calc(1.75rem - 6px);
+  height: 3px;
+  background: var(--black);
+}
+.pipeline-crew { background: var(--sky-low) !important; }
+.pipeline-me { background: var(--bright-yellow) !important; }
+.step { font-weight: 750; font-variation-settings: "wdth" 108; }
+.step-note { font-size: 0.85rem; color: var(--ink); }
+
+.pipeline-loop {
+  margin-top: 1.25rem;
+  padding-left: 1rem;
+  border-left: 3px solid var(--grass-dark);
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.workshop-gets {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rule);
+}
+.workshop-gets p { margin: 0; }
+
+.faq {
+  margin-top: 2rem;
+  padding: 1.25rem 1.5rem;
+  background: #fff;
+  border: 2px solid var(--black);
+  border-radius: var(--radius-lg);
+}
+.faq p { margin: 0; }
+
 /* ---------- Builds ---------- */
 
 .section-intro { color: var(--muted); margin-top: -1rem; }
@@ -510,6 +588,16 @@ p { margin: 0 0 1rem; max-width: 62ch; }
   .skill-lead ul { grid-column: 1; grid-row: auto; margin-top: 0.75rem; }
   .skill:last-child { padding-left: 0; border-left: 0; }
   .hello { flex-direction: column; align-items: flex-start; }
+  .workshop-gets { grid-template-columns: 1fr; }
+  .pipeline { grid-template-columns: 1fr; gap: 1.25rem; }
+  .pipeline li + li::after {
+    right: auto;
+    left: 1.5rem;
+    top: auto;
+    bottom: calc(100% + 4px);
+    width: 3px;
+    height: calc(1.25rem - 6px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
