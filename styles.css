@@ -465,15 +465,11 @@ p { margin: 0 0 1rem; max-width: 62ch; }
   font-weight: 500;
 }
 
-.workshop-gets {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  margin-top: 2.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--rule);
+.workshop-note {
+  margin-top: 2rem;
+  font-size: 1.1rem;
+  max-width: 60ch;
 }
-.workshop-gets p { margin: 0; }
 
 .faq {
   margin-top: 2rem;
@@ -588,7 +584,6 @@ p { margin: 0 0 1rem; max-width: 62ch; }
   .skill-lead ul { grid-column: 1; grid-row: auto; margin-top: 0.75rem; }
   .skill:last-child { padding-left: 0; border-left: 0; }
   .hello { flex-direction: column; align-items: flex-start; }
-  .workshop-gets { grid-template-columns: 1fr; }
   .pipeline { grid-template-columns: 1fr; gap: 1.25rem; }
   .pipeline li + li::after {
     right: auto;
