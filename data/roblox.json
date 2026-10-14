@@ -1,6 +1,23 @@
 {
-  "updated": null,
-  "totalVisits": 0,
-  "gameCount": 0,
-  "games": {}
+  "updated": "2026-10-14T09:33:29.352Z",
+  "totalVisits": 28769,
+  "gameCount": 1,
+  "games": {
+    "139369528722370": {
+      "name": "Pull a Planet🪐 ",
+      "creator": "OGU Games",
+      "visits": 28769,
+      "playing": 0,
+      "favorites": 858,
+      "created": "2026-09-21T00:12:32.429Z",
+      "updated": "2026-10-13T16:17:00.829Z",
+      "url": "https://www.roblox.com/games/139369528722370",
+      "icon": "https://tr.rbxcdn.com/180DAY-8157cf45d23b342d9a1aff88b1d95f55/512/512/Image/Png/noFilter",
+      "thumbnails": [
+        "https://tr.rbxcdn.com/180DAY-4a480dd13b800c8deba50e720c6c8bea/768/432/Image/Png/noFilter",
+        "https://tr.rbxcdn.com/180DAY-a21c08ffd10929a97fda488cb50d3300/768/432/Image/Png/noFilter",
+        "https://tr.rbxcdn.com/180DAY-6077ee937285312adb3ebd7b24dc8c6f/768/432/Image/Png/noFilter"
+      ]
+    }
+  }
 }

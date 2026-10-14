@@ -128,9 +128,20 @@ a:hover { text-decoration-thickness: 2px; }
   margin-top: 2.5rem;
 }
 
-.hero-links a {
+.hero-links a,
+.hero-links .copy {
   color: var(--ink);
   font-weight: 600;
+}
+.hero-links .copy {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  cursor: pointer;
 }
 
 /* ---------- Sections ---------- */
@@ -278,7 +289,10 @@ p { margin: 0 0 1rem; max-width: 62ch; }
   padding: 0;
   list-style: none;
 }
-.contact-links a {
+.contact-links a,
+.contact-links .copy {
+  font: inherit;
+  cursor: pointer;
   display: inline-block;
   padding: 0.65rem 1rem;
   border: 2px solid var(--black);
@@ -289,11 +303,13 @@ p { margin: 0 0 1rem; max-width: 62ch; }
   box-shadow: 4px 4px 0 var(--black);
   transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
-.contact-links a:hover {
+.contact-links a:hover,
+.contact-links .copy:hover {
   transform: translate(2px, 2px);
   box-shadow: 2px 2px 0 var(--black);
 }
-.contact-links .is-primary a { background: var(--bright-yellow); }
+.contact-links .is-primary a,
+.contact-links .is-primary .copy { background: var(--bright-yellow); }
 
 /* ---------- Footer ---------- */
 
@@ -315,5 +331,6 @@ p { margin: 0 0 1rem; max-width: 62ch; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .contact-links a { transition: none; }
+  .contact-links a,
+  .contact-links .copy { transition: none; }
 }

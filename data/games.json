@@ -1,3 +1,10 @@
 {
-  "games": []
+  "games": [
+    {
+      "placeId": "139369528722370",
+      "status": "Live",
+      "duo": true,
+      "title": "Pull a Planet"
+    }
+  ]
 }

@@ -38,10 +38,26 @@ if (site) {
   $("name").textContent = site.name;
   $("tagline").textContent = site.tagline;
 
-  const profileLinks = site.links.filter((l) => !l.url.startsWith("mailto:"));
-  $("hero-links").replaceChildren(
-    ...profileLinks.map((l) => el("a", { href: l.url, rel: "me noopener" }, l.label))
-  );
+  $("hero-links").replaceChildren(...site.links.map(linkNode));
+}
+
+// A link with a URL opens it. One with only a handle (Discord usernames have no
+// public URL) copies the handle instead.
+function linkNode(l) {
+  const text = l.handle ? `${l.label}: ${l.handle}` : l.label;
+  if (l.url) return el("a", { href: l.url, rel: "me noopener" }, text);
+
+  const button = el("button", { type: "button", class: "copy" }, text);
+  button.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(l.handle);
+      button.textContent = `Copied ${l.handle}`;
+    } catch {
+      button.textContent = text;
+    }
+    setTimeout(() => (button.textContent = text), 1800);
+  });
+  return button;
 }
 
 // The one moment of motion on the page: the visit count rolls up on load.
@@ -124,9 +140,7 @@ if (site) {
 
   $("contact-links").replaceChildren(
     ...[...site.links].sort((a, b) => (b.label === "Discord") - (a.label === "Discord")).map((l) =>
-      el("li", { class: l.label === "Discord" ? "is-primary" : null },
-        el("a", { href: l.url, rel: "noopener" },
-          l.handle ? `${l.label}: ${l.handle}` : l.label))
+      el("li", { class: l.label === "Discord" ? "is-primary" : null }, linkNode(l))
     )
   );
 }
