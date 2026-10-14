@@ -11,7 +11,18 @@
       "title": "Anything Arena",
       "status": "In the works",
       "duo": true,
+      "role": ["Project lead", "Full-stack scripting", "Game design", "Map building", "Animation", "UI/UX"],
       "blurb": "A first-person arena shooter."
+    },
+    {
+      "title": "+1 Throw a Cube",
+      "status": "In the works",
+      "duo": true
+    },
+    {
+      "title": "Chop a Verity",
+      "status": "In the works",
+      "duo": true
     }
   ]
 }
