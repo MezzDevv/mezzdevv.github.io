@@ -95,7 +95,7 @@ if (total > 0) {
 
 // ---------- Cloud buddy ----------
 
-const buddyLines = ["zzz…", "hi!", "five more minutes", "*yawn*", "go play Pull a Planet", "☁️"];
+const buddyLines = ["I love Cinnamoroll", "zzz…", "hi!", "five more minutes", "*yawn*", "go play Pull a Planet", "☁️"];
 let buddyIndex = 0;
 let buddyTimer;
 $("buddy").addEventListener("click", () => {
