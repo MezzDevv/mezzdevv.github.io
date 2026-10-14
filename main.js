@@ -86,9 +86,7 @@ function rollUp(node, target) {
 const total = roblox?.totalVisits ?? 0;
 if (total > 0) {
   rollUp($("visits-number"), total);
-  const n = roblox.gameCount;
-  $("visits-label").textContent =
-    `visits across ${n} game${n === 1 ? "" : "s"} I've worked on`;
+  $("visits-label").textContent = "contributed visits";
 } else {
   $("visits").classList.add("is-empty");
   $("visits-number").textContent = "–";
