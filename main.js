@@ -42,6 +42,11 @@ if (site) {
   $("hero-links").replaceChildren(...site.links.map(linkNode));
 }
 
+if (roblox?.avatar) {
+  $("avatar").src = roblox.avatar;
+  $("avatar").hidden = false;
+}
+
 // A link with a URL opens it. One with only a handle (Discord usernames have no
 // public URL) copies the handle instead.
 function linkNode(l) {
@@ -113,7 +118,7 @@ function renderGame(g) {
 
   const tags = [
     el("li", { class: isLive ? null : "is-dev" }, status),
-    g.duo ? el("li", {}, "Duo project") : null,
+    g.duo ? el("li", {}, "Built with a friend") : null,
     ...roles.map((r) => el("li", {}, r)),
   ];
 

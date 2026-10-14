@@ -8,6 +8,7 @@ on:
     paths:
       - data/games.json
       - data/counted-games.json
+      - data/site.json
 
 permissions:
   contents: write

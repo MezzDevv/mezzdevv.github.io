@@ -22,6 +22,7 @@ async function getJson(url) {
   return res.json();
 }
 
+const site = await readJson("data/site.json");
 const shown = await readJson("data/games.json");
 const counted = await readJson("data/counted-games.json");
 
@@ -85,8 +86,18 @@ for (let i = 0; i < universeIds.length; i += 50) {
   }
 }
 
+// Avatar headshot for the hero, from site.json's robloxUserId.
+let avatar = null;
+if (/^\d+$/.test(String(site.robloxUserId ?? ""))) {
+  const { data } = await getJson(
+    `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${site.robloxUserId}&size=420x420&format=Png&isCircular=false`
+  );
+  if (data[0]?.state === "Completed") avatar = data[0].imageUrl;
+}
+
 const out = {
   updated: new Date().toISOString(),
+  avatar,
   totalVisits,
   gameCount: Object.keys(games).length,
   games,
