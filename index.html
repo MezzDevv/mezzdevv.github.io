@@ -28,7 +28,7 @@
     try {
       if (!sessionStorage.getItem("introSeen") && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
         document.documentElement.classList.add("intro");
-        setTimeout(function () { document.documentElement.classList.remove("intro", "intro-ready", "intro-out"); }, 8000);
+        setTimeout(function () { document.documentElement.classList.remove("intro", "intro-ready", "intro-shrink", "intro-out"); }, 8000);
       }
     } catch (e) {}
   </script>

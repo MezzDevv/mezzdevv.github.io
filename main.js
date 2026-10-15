@@ -142,7 +142,8 @@ function playIntro() {
       anims.forEach((a) => a.finish());
       anims.forEach((a) => a.cancel());
       drops.forEach((el) => (el.style.visibility = ""));
-      root.classList.remove("intro", "intro-ready", "intro-out");
+      root.classList.remove("intro", "intro-ready", "intro-shrink", "intro-out");
+      root.style.removeProperty("--sky-cut");
       try { sessionStorage.setItem("introSeen", "1"); } catch {}
       removeEventListener("pointerdown", finish);
       removeEventListener("keydown", finish);
@@ -151,14 +152,22 @@ function playIntro() {
     addEventListener("pointerdown", finish);
     addEventListener("keydown", finish);
 
-    // Two seconds after the page opened, the cloud flies home.
-    const wait = Math.max(0, 2000 - performance.now());
+    // One second after the page opened, the cloud flies home.
+    const wait = Math.max(0, 1000 - performance.now());
     timers.push(setTimeout(() => {
       anims.push(svg.animate(
         [{ transform: centered, opacity: 1 }, { transform: "none", opacity: 1 }],
         { duration: 750, easing: "cubic-bezier(0.77, 0, 0.175, 1)", fill: "forwards" }
       ));
-      timers.push(setTimeout(() => root.classList.add("intro-out"), 250));
+      // As the pieces start falling, the full-screen sky shrinks down to the grass,
+      // then hands over to the real hero sky underneath.
+      const ground = document.querySelector(".ground");
+      const cut = Math.max(0, window.innerHeight - ground.getBoundingClientRect().top);
+      timers.push(setTimeout(() => {
+        root.style.setProperty("--sky-cut", `${cut}px`);
+        root.classList.add("intro-shrink");
+      }, 450));
+      timers.push(setTimeout(() => root.classList.add("intro-out"), 450 + 800));
 
       // Then the pieces drop in, bottom piece first.
       const fall = [

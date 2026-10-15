@@ -91,13 +91,18 @@ html.intro body::before {
     radial-gradient(ellipse 14rem 3.5rem at 70% 30%, rgb(255 255 255 / 0.6), transparent 70%),
     radial-gradient(ellipse 18rem 4rem at 12% 12%, rgb(255 255 255 / 0.55), transparent 70%),
     linear-gradient(180deg, var(--sky-top), var(--sky-low));
-  transition: opacity 500ms var(--ease-out);
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 800ms var(--ease-in-out), opacity 300ms var(--ease-out);
 }
+/* The sky's bottom edge rises to meet the grass (--sky-cut is set by the intro script). */
+html.intro-shrink body::before { clip-path: inset(0 0 var(--sky-cut, 0px) 0); }
 html.intro-out body::before { opacity: 0; }
 
 html.intro .buddy { z-index: 60; animation: none; }
 html.intro:not(.intro-ready) .buddy { visibility: hidden; }
 html.intro .drop { visibility: hidden; }
+/* Falling pieces sit in front of the intro sky so the whole fall is seen. */
+html.intro .drop { position: relative; z-index: 55; }
 /* Below the hero waits until the build is done, then fades in. */
 main, .footer { transition: opacity 400ms var(--ease-out); }
 html.intro main,
