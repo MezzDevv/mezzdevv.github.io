@@ -152,8 +152,8 @@ function playIntro() {
     addEventListener("pointerdown", finish);
     addEventListener("keydown", finish);
 
-    // One second after the page opened, the cloud flies home.
-    const wait = Math.max(0, 1000 - performance.now());
+    // The cloud fades in (450ms), holds still for 0.4s, then flies home.
+    const wait = 450 + 400;
     timers.push(setTimeout(() => {
       anims.push(svg.animate(
         [{ transform: centered, opacity: 1 }, { transform: "none", opacity: 1 }],
