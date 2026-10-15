@@ -546,8 +546,31 @@ p { margin: 0 0 1rem; max-width: 62ch; }
   background: var(--tag-bg, #fff);
 }
 /* Status and who built it */
-.game-tags .tag-live   { --tag-bg: #9be07a; }
-.game-tags .tag-dev    { --tag-bg: var(--bright-yellow); }
+.game-tags .tag-live    { --tag-bg: #9be07a; --dot: #237a2c; }
+.game-tags .tag-dev     { --tag-bg: var(--bright-yellow); --dot: #a86a00; }
+.game-tags .tag-retired { --tag-bg: #ffb4ad; --dot: #c4271f; }
+
+/* Status pills get a dot that pulses outward, like a "live" light. */
+.tag-status { display: inline-flex; align-items: center; gap: 0.4rem; }
+.status-dot {
+  position: relative;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--dot);
+}
+.status-dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--dot);
+  animation: status-pulse 2s var(--ease-out) infinite;
+}
+@keyframes status-pulse {
+  from { transform: scale(1); opacity: 0.55; }
+  to { transform: scale(2.8); opacity: 0; }
+}
 .game-tags .tag-friend { --tag-bg: #fbd3df; }
 /* Role tags, by skill area */
 .game-tags .tag-code   { --tag-bg: var(--area-code); }
@@ -802,5 +825,6 @@ p, li { text-wrap: pretty; }
   .js .reveal { transform: none; }
   .js .reveal.is-in { transition: opacity 200ms ease; transition-delay: 0ms; }
   .buddy,
-  .buddy.is-awake svg { animation: none; }
+  .buddy.is-awake svg,
+  .status-dot::after { animation: none; }
 }

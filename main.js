@@ -227,16 +227,18 @@ $("buddy").addEventListener("click", () => {
 // ---------- Games ----------
 
 // Order: live games first, busiest (players online at the last stats update) on top,
-// then most visits; unreleased games after, the ones I have the most roles on first.
+// then most visits; retired games next, by visits; unreleased games last, the ones
+// I have the most roles on first.
 const liveStats = (g) => roblox?.games?.[String(g.placeId)] ?? {};
 const roleCount = (g) => [g.role ?? []].flat().length;
 const shown = [...(games?.games ?? [])].sort((a, b) => {
-  const aLive = (a.status || "") === "Live", bLive = (b.status || "") === "Live";
-  if (aLive !== bLive) return aLive ? -1 : 1;
-  if (aLive) {
+  const rank = (g) => ({ Live: 0, Retired: 1 })[g.status] ?? 2;
+  if (rank(a) !== rank(b)) return rank(a) - rank(b);
+  if (rank(a) === 0) {
     return (liveStats(b).playing ?? 0) - (liveStats(a).playing ?? 0)
       || (liveStats(b).visits ?? 0) - (liveStats(a).visits ?? 0);
   }
+  if (rank(a) === 1) return (liveStats(b).visits ?? 0) - (liveStats(a).visits ?? 0);
   return roleCount(b) - roleCount(a);
 });
 if (shown.length === 0) {
@@ -255,10 +257,12 @@ function renderGame(g) {
   const url = g.url || live.url;
   const status = g.status || "In development";
   const isLive = status === "Live";
+  const isRetired = status === "Retired";
+  const statusClass = isLive ? "tag-live" : isRetired ? "tag-retired" : "tag-dev";
   const roles = [g.role ?? []].flat();
 
   const tags = [
-    el("li", { class: isLive ? "tag-live" : "tag-dev" }, status),
+    el("li", { class: `tag-status ${statusClass}` }, el("span", { class: "status-dot", "aria-hidden": "true" }), status),
     g.duo ? el("li", { class: "tag-friend" }, "Built with a friend") : null,
     ...roles.map((r) => el("li", { class: `tag-${roleArea[r.toLowerCase()] ?? "other"}` }, r)),
   ];
@@ -277,7 +281,7 @@ function renderGame(g) {
     el("ul", { class: "game-tags" }, tags),
     g.blurb ? el("p", {}, g.blurb) : null,
     stats.length ? el("p", { class: "game-stats" }, stats.join(", ")) : null,
-    url && isLive ? el("a", { href: url }, `Play ${title} on Roblox`) : null
+    url && (isLive || isRetired) ? el("a", { href: url }, `Play ${title} on Roblox`) : null
   );
 }
 
