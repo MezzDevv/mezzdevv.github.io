@@ -110,6 +110,16 @@ if (total > 0) {
   $("visits-label").textContent = "Visit count updates once games are added";
 }
 
+// Skill clips autoplay like GIFs, except for visitors who asked for less motion:
+// they get the still frame and play controls instead.
+if (reduceMotion) {
+  for (const v of document.querySelectorAll(".skill-clip video")) {
+    v.removeAttribute("autoplay");
+    v.pause();
+    v.controls = true;
+  }
+}
+
 // ---------- Cloud buddy ----------
 
 const buddyLines = ["I love Cinnamoroll", "zzz…", "hi!", "five more minutes", "*yawn*", "go play Pull a Planet", "☁️"];

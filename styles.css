@@ -344,6 +344,23 @@ p { margin: 0 0 1rem; max-width: 62ch; }
 
 .skill p { color: var(--ink); margin-bottom: 0; }
 
+.skill-clip { margin: 0 0 1rem; }
+.skill-clip video,
+.skill-clip img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border: 2px solid var(--black);
+  border-radius: calc(var(--radius) - 2px);
+  background: var(--black);
+}
+.skill-clip figcaption {
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
 /* Jobs: what people can hire me for, each dotted with its skill-area colour. */
 .jobs { margin-top: 2.5rem; }
 .jobs ul {
