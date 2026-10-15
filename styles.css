@@ -18,6 +18,10 @@
   --grass-dark: #4b974b; /* BrickColor "Bright green" */
   --grass-stud: #82d15f;
   --radius: 8px;
+  --area-code: #bfe3fb;
+  --area-3d: #d3efc4;
+  --area-visual: #e2d5fa;
+  --area-lead: #ffd9b0;
   --radius-lg: 18px;
 
   --font: "Archivo", system-ui, sans-serif;
@@ -292,25 +296,29 @@ p { margin: 0 0 1rem; max-width: 62ch; }
 
 /* ---------- Skills ---------- */
 
+/* Each card wears its skill-area colour, the same one its role tags use on game cards. */
 .skills {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  border-top: 3px solid var(--ink);
+  gap: 1rem;
 }
 
 .skill {
-  padding: 1.5rem 1.5rem 1.25rem 0;
-  border-bottom: 1px solid var(--rule);
+  padding: 1.25rem 1.5rem;
+  background: var(--area-bg);
+  border: 2px solid var(--black);
+  border-radius: var(--radius);
 }
-.skill + .skill:not(.skill-lead) { padding-left: 0; }
-.skill:last-child { padding-left: 1.5rem; border-left: 1px solid var(--rule); }
+.skill-code   { --area-bg: var(--area-code); }
+.skill-3d     { --area-bg: var(--area-3d); }
+.skill-visual { --area-bg: var(--area-visual); }
 
 .skill-lead {
   grid-column: 1 / -1;
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
   gap: 0.5rem 3rem;
-  padding-block: 2rem 1.75rem;
+  padding-block: 1.75rem;
 }
 .skill-lead h3 {
   font-size: clamp(1.6rem, 3.2vw, 2.1rem);
@@ -329,12 +337,39 @@ p { margin: 0 0 1rem; max-width: 62ch; }
 }
 .skill-lead li {
   padding: 0.55rem 0;
-  border-bottom: 1px solid var(--rule);
+  border-bottom: 1px solid rgb(27 42 53 / 0.18);
   font-weight: 500;
 }
 .skill-lead li:first-child { padding-top: 0.2rem; }
 
 .skill p { color: var(--ink); margin-bottom: 0; }
+
+/* Jobs: what people can hire me for, each dotted with its skill-area colour. */
+.jobs { margin-top: 2.5rem; }
+.jobs ul {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem 2rem;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.jobs li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  font-weight: 500;
+}
+.jobs li::before {
+  content: "";
+  flex: none;
+  width: 0.8rem;
+  height: 0.8rem;
+  border: 2px solid var(--black);
+  border-radius: 3px;
+  background: var(--area-bg);
+  transform: translateY(0.1rem);
+}
 
 /* ---------- Games ---------- */
 
@@ -400,10 +435,10 @@ p { margin: 0 0 1rem; max-width: 62ch; }
 .game-tags .tag-dev    { --tag-bg: var(--bright-yellow); }
 .game-tags .tag-friend { --tag-bg: #fbd3df; }
 /* Role tags, by skill area */
-.game-tags .tag-code   { --tag-bg: #bfe3fb; }
-.game-tags .tag-3d     { --tag-bg: #d3efc4; }
-.game-tags .tag-visual { --tag-bg: #e2d5fa; }
-.game-tags .tag-lead   { --tag-bg: #ffd9b0; }
+.game-tags .tag-code   { --tag-bg: var(--area-code); }
+.game-tags .tag-3d     { --tag-bg: var(--area-3d); }
+.game-tags .tag-visual { --tag-bg: var(--area-visual); }
+.game-tags .tag-lead   { --tag-bg: var(--area-lead); }
 
 .game-stats { color: var(--muted); font-size: 0.95rem; }
 
@@ -599,7 +634,7 @@ p { margin: 0 0 1rem; max-width: 62ch; }
   .skills { grid-template-columns: 1fr; }
   .skill-lead { grid-template-columns: 1fr; }
   .skill-lead ul { grid-column: 1; grid-row: auto; margin-top: 0.75rem; }
-  .skill:last-child { padding-left: 0; border-left: 0; }
+  .jobs ul { grid-template-columns: 1fr; }
   .hello { flex-direction: column; align-items: flex-start; }
   .pipeline { grid-template-columns: 1fr; gap: 1.25rem; }
   .pipeline li + li::after {
