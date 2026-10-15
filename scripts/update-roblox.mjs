@@ -95,20 +95,9 @@ if (/^\d+$/.test(String(site.robloxUserId ?? ""))) {
   if (data[0]?.state === "Completed") avatar = data[0].imageUrl;
 }
 
-// Site visitor total from GoatCounter's public counter. Fetched here, server-side,
-// because ad blockers stop many browsers from reaching GoatCounter directly.
-let siteVisitors = null;
-try {
-  const total = await getJson("https://mezz.goatcounter.com/counter/TOTAL.json");
-  siteVisitors = Number(String(total.count ?? "").replace(/\D/g, "")) || 0;
-} catch (err) {
-  console.warn(`GoatCounter total unavailable: ${err.message}`);
-}
-
 const out = {
   updated: new Date().toISOString(),
   avatar,
-  siteVisitors,
   totalVisits,
   gameCount: Object.keys(games).length,
   games,

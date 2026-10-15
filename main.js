@@ -265,21 +265,16 @@ if ("IntersectionObserver" in window) {
 }
 
 // ---------- Visitor counter ----------
-// Shows GoatCounter's total. The stats job saves a copy every few hours (never blocked);
-// a live fetch upgrades it when the visitor's browser allows GoatCounter.
+// Total from GoatCounter's public counter. Stays hidden at zero, or when the visitor's
+// browser blocks GoatCounter (ad and tracker blockers do).
 
-function showVisitors(n) {
-  if (!n) return;
-  $("visitors").textContent = `${fmt.format(n)} visitor${n === 1 ? "" : "s"}`;
-  $("visitors").hidden = false;
-}
-const savedVisitors = Number(roblox?.siteVisitors) || 0;
-showVisitors(savedVisitors);
 fetch("https://mezz.goatcounter.com/counter/TOTAL.json")
   .then((r) => (r.ok ? r.json() : null))
   .then((d) => {
-    const live = Number(String(d?.count ?? "").replace(/\D/g, "")) || 0;
-    if (live > savedVisitors) showVisitors(live);
+    const n = Number(String(d?.count ?? "").replace(/\D/g, "")) || 0;
+    if (!n) return;
+    $("visitors").textContent = `${fmt.format(n)} visitor${n === 1 ? "" : "s"}`;
+    $("visitors").hidden = false;
   })
   .catch(() => {});
 
