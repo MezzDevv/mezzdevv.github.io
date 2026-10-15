@@ -226,7 +226,19 @@ $("buddy").addEventListener("click", () => {
 
 // ---------- Games ----------
 
-const shown = games?.games ?? [];
+// Order: live games first, busiest (players online at the last stats update) on top,
+// then most visits; unreleased games after, the ones I have the most roles on first.
+const liveStats = (g) => roblox?.games?.[String(g.placeId)] ?? {};
+const roleCount = (g) => [g.role ?? []].flat().length;
+const shown = [...(games?.games ?? [])].sort((a, b) => {
+  const aLive = (a.status || "") === "Live", bLive = (b.status || "") === "Live";
+  if (aLive !== bLive) return aLive ? -1 : 1;
+  if (aLive) {
+    return (liveStats(b).playing ?? 0) - (liveStats(a).playing ?? 0)
+      || (liveStats(b).visits ?? 0) - (liveStats(a).visits ?? 0);
+  }
+  return roleCount(b) - roleCount(a);
+});
 if (shown.length === 0) {
   $("games").replaceChildren(
     el("div", { class: "empty" },
