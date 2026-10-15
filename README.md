@@ -65,3 +65,10 @@ python -m http.server 8765
 ```
 
 Then open http://localhost:8765. Opening `index.html` directly won't load the data.
+
+## Caching
+
+GitHub Pages lets browsers keep files for 10 minutes. `index.html` loads
+`styles.css?v=…` and `main.js?v=…`: change that `v` value (any new number, e.g. the
+date and time) whenever you edit the CSS or JS, so visitors get the new version
+straight away. If a change still doesn't show, press Ctrl+F5.
