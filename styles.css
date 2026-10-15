@@ -392,9 +392,18 @@ p { margin: 0 0 1rem; max-width: 62ch; }
 .game-tags li {
   border-radius: 999px;
   padding: 0.1rem 0.6rem;
-  border: 1px solid var(--dark-stone-grey);
+  border: 1px solid var(--black);
+  background: var(--tag-bg, #fff);
 }
-.game-tags .is-dev { background: var(--bright-yellow); border-color: var(--black); }
+/* Status and who built it */
+.game-tags .tag-live   { --tag-bg: #9be07a; }
+.game-tags .tag-dev    { --tag-bg: var(--bright-yellow); }
+.game-tags .tag-friend { --tag-bg: #fbd3df; }
+/* Role tags, by skill area */
+.game-tags .tag-code   { --tag-bg: #bfe3fb; }
+.game-tags .tag-3d     { --tag-bg: #d3efc4; }
+.game-tags .tag-visual { --tag-bg: #e2d5fa; }
+.game-tags .tag-lead   { --tag-bg: #ffd9b0; }
 
 .game-stats { color: var(--muted); font-size: 0.95rem; }
 

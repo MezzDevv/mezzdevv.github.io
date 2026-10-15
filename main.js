@@ -14,6 +14,22 @@ const [site, games, builds, roblox] = await Promise.all([
 
 const $ = (id) => document.getElementById(id);
 
+// Role tags are coloured by the skill area they belong to, matching "What I can help with".
+const roleArea = {
+  "full-stack scripting": "code",
+  "scripting": "code",
+  "modelling": "3d",
+  "map building": "3d",
+  "building": "3d",
+  "vfx": "visual",
+  "animation": "visual",
+  "ui/ux": "visual",
+  "ui": "visual",
+  "project lead": "lead",
+  "game design": "lead",
+};
+
+
 function el(tag, attrs = {}, ...children) {
   const node = document.createElement(tag);
   for (const [k, v] of Object.entries(attrs)) {
@@ -132,9 +148,9 @@ function renderGame(g) {
   const roles = [g.role ?? []].flat();
 
   const tags = [
-    el("li", { class: isLive ? null : "is-dev" }, status),
-    g.duo ? el("li", {}, "Built with a friend") : null,
-    ...roles.map((r) => el("li", {}, r)),
+    el("li", { class: isLive ? "tag-live" : "tag-dev" }, status),
+    g.duo ? el("li", { class: "tag-friend" }, "Built with a friend") : null,
+    ...roles.map((r) => el("li", { class: `tag-${roleArea[r.toLowerCase()] ?? "other"}` }, r)),
   ];
 
   const stats = [];
