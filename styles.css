@@ -547,7 +547,7 @@ p { margin: 0 0 1rem; max-width: 62ch; }
 }
 /* Status and who built it */
 .game-tags .tag-live    { --tag-bg: #9be07a; --dot: #237a2c; }
-.game-tags .tag-dev     { --tag-bg: var(--bright-yellow); --dot: #a86a00; }
+.game-tags .tag-dev     { --tag-bg: var(--bright-yellow); --dot: #fff36b; }
 .game-tags .tag-retired { --tag-bg: #ffb4ad; --dot: #c4271f; }
 
 /* Status pills get a dot that pulses outward, like a "live" light. */
@@ -558,6 +558,8 @@ p { margin: 0 0 1rem; max-width: 62ch; }
   height: 0.5rem;
   border-radius: 50%;
   background: var(--dot);
+  /* Thin dark rim so a light dot still reads on its pill. */
+  box-shadow: inset 0 0 0 1.5px rgb(27 42 53 / 0.5);
 }
 .status-dot::after {
   content: "";
