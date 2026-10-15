@@ -16,7 +16,12 @@
       "title": "Chop a Verity",
       "status": "Live",
       "duo": true,
-      "placeId": "78767891782862"
+      "placeId": "78767891782862",
+      "role": [
+        "Full-stack scripting",
+        "Modelling",
+        "Animation"
+      ]
     },
     {
       "title": "Anything Arena",
