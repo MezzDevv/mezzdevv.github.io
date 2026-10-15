@@ -388,6 +388,11 @@ p { margin: 0 0 1rem; max-width: 62ch; }
   transform: translateY(0.1rem);
 }
 
+.jobs-note {
+  margin: 1.25rem 0 0;
+  font-weight: 650;
+}
+
 /* ---------- Games ---------- */
 
 .games {
