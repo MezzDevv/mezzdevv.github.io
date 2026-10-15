@@ -24,6 +24,10 @@
   --area-lead: #ffd9b0;
   --radius-lg: 18px;
 
+  /* Motion curves (Emil Kowalski's set): strong ease-out for entrances and feedback. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+
   --font: "Archivo", system-ui, sans-serif;
   --wrap: 68rem;
   --gutter: clamp(1rem, 4vw, 2.5rem);
@@ -403,10 +407,32 @@ p { margin: 0 0 1rem; max-width: 62ch; }
 
 .game { display: flex; flex-direction: column; }
 
+/* Hover: the card lifts and casts a brick shadow, the picture inside eases in a touch.
+   Gated to real pointers so a tap on a phone doesn't leave a card stuck "hovered". */
 .game,
-.build { transition: transform 0.18s ease; }
-.game:hover,
-.build:hover { transform: translateY(-4px); }
+.build,
+.skill-clip {
+  transition: transform 200ms var(--ease-out);
+}
+.game-media,
+.build img,
+.skill-clip video,
+.skill-clip img {
+  transition: box-shadow 200ms var(--ease-out);
+}
+.game-media img,
+.build img,
+.skill-clip video,
+.skill-clip img {
+  transition: transform 300ms var(--ease-out), box-shadow 200ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .game:hover,
+  .build:hover { transform: translateY(-4px); }
+  .game:hover .game-media,
+  .build:hover img { box-shadow: 5px 5px 0 var(--black); }
+  .game:hover .game-media img { transform: scale(1.04); }
+}
 
 .game-media {
   border-radius: var(--radius);
@@ -631,12 +657,20 @@ p { margin: 0 0 1rem; max-width: 62ch; }
   background: var(--paper);
   box-shadow: 4px 4px 0 var(--black);
   border-radius: var(--radius);
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  transition: transform 160ms var(--ease-out), box-shadow 160ms var(--ease-out);
 }
-.contact-links a:hover,
-.contact-links .copy:hover {
-  transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0 var(--black);
+/* Bricks: hover sinks it halfway, pressing pushes it flat onto its shadow. */
+@media (hover: hover) and (pointer: fine) {
+  .contact-links a:hover,
+  .contact-links .copy:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 var(--black);
+  }
+}
+.contact-links a:active,
+.contact-links .copy:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 var(--black);
 }
 .contact-links .is-primary a,
 .contact-links .is-primary .copy { background: var(--bright-yellow); }
@@ -669,13 +703,36 @@ p { margin: 0 0 1rem; max-width: 62ch; }
   }
 }
 
+/* Scroll reveal: blocks drop into place like bricks the first time they come into view.
+   Only applied when JavaScript has marked the page, so content never stays hidden. */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(18px);
+}
+/* The transition lives on the landed state only, so hiding is instant (no flash) and
+   only the drop-in animates. */
+.js .reveal.is-in {
+  opacity: 1;
+  transform: none;
+  transition: opacity 450ms var(--ease-out), transform 450ms var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 60ms);
+}
+
+h1, h2, h3 { text-wrap: balance; }
+p, li { text-wrap: pretty; }
+
 @media (prefers-reduced-motion: reduce) {
   .contact-links a,
   .contact-links .copy,
   .game,
-  .build { transition: none; }
+  .build,
+  .game-media img { transition: none; }
   .game:hover,
-  .build:hover { transform: none; }
+  .build:hover,
+  .game:hover .game-media img { transform: none; }
+  /* Reveals keep a short fade but drop the movement. */
+  .js .reveal { transform: none; }
+  .js .reveal.is-in { transition: opacity 200ms ease; transition-delay: 0ms; }
   .buddy,
   .buddy.is-awake svg { animation: none; }
 }

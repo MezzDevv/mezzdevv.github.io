@@ -213,6 +213,57 @@ if (site) {
   );
 }
 
+// ---------- Scroll reveal ----------
+// Cards drop in once as they first scroll into view, staggered within each group.
+// Cards already on screen at load show immediately (no animation on first paint).
+
+const revealGroups = [".skills > .skill", ".jobs", ".pipeline > li", "#games > .game", "#builds > .build"];
+if ("IntersectionObserver" in window) {
+  const seen = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      const node = e.target;
+      if (!e.isIntersecting) continue;
+      node.classList.add("is-in");
+      seen.unobserve(node);
+      // Once landed, drop the reveal styles so hover uses its own quick timing.
+      node.addEventListener("transitionend", function done(ev) {
+        if (ev.target !== node || ev.propertyName !== "opacity") return;
+        node.classList.remove("reveal", "is-in");
+        node.style.removeProperty("--i");
+        node.removeEventListener("transitionend", done);
+      });
+    }
+  }, { rootMargin: "0px 0px -60px 0px" });
+
+  const foldLine = window.innerHeight;
+  for (const selector of revealGroups) {
+    document.querySelectorAll(selector).forEach((node, i) => {
+      if (node.getBoundingClientRect().top < foldLine) return; // already visible: leave it alone
+      node.classList.add("reveal");
+      node.style.setProperty("--i", i);
+      seen.observe(node);
+    });
+  }
+  document.documentElement.classList.add("js");
+
+  // A jump past a section (a link, a fast fling) never makes its cards "intersect",
+  // so on scroll, show anything already above the screen as-is rather than leave a hole.
+  let queued = false;
+  window.addEventListener("scroll", () => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(() => {
+      queued = false;
+      for (const node of document.querySelectorAll(".reveal:not(.is-in)")) {
+        if (node.getBoundingClientRect().bottom > 0) continue;
+        node.classList.remove("reveal");
+        node.style.removeProperty("--i");
+        seen.unobserve(node);
+      }
+    });
+  }, { passive: true });
+}
+
 // ---------- Footer ----------
 
 $("updated").textContent = roblox?.updated
