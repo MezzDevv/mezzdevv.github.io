@@ -407,31 +407,23 @@ p { margin: 0 0 1rem; max-width: 62ch; }
 
 .game { display: flex; flex-direction: column; }
 
-/* Hover: the card lifts and casts a brick shadow, the picture inside eases in a touch.
-   Gated to real pointers so a tap on a phone doesn't leave a card stuck "hovered". */
-.game,
-.build,
-.skill-clip {
-  transition: transform 200ms var(--ease-out);
-}
+/* Hover: only the picture pops (lifts, casts a brick shadow, eases in a touch);
+   the text under it stays put. Gated to real pointers so a tap on a phone
+   doesn't leave a picture stuck "hovered". */
 .game-media,
-.build img,
-.skill-clip video,
-.skill-clip img {
-  transition: box-shadow 200ms var(--ease-out);
+.build img {
+  transition: transform 200ms var(--ease-out), box-shadow 200ms var(--ease-out);
 }
-.game-media img,
-.build img,
-.skill-clip video,
-.skill-clip img {
-  transition: transform 300ms var(--ease-out), box-shadow 200ms var(--ease-out);
+.game-media img {
+  transition: transform 300ms var(--ease-out);
 }
 @media (hover: hover) and (pointer: fine) {
-  .game:hover,
-  .build:hover { transform: translateY(-4px); }
-  .game:hover .game-media,
-  .build:hover img { box-shadow: 5px 5px 0 var(--black); }
-  .game:hover .game-media img { transform: scale(1.04); }
+  .game-media:hover,
+  .build img:hover {
+    transform: translateY(-4px);
+    box-shadow: 5px 5px 0 var(--black);
+  }
+  .game-media:hover img { transform: scale(1.04); }
 }
 
 .game-media {
@@ -724,12 +716,12 @@ p, li { text-wrap: pretty; }
 @media (prefers-reduced-motion: reduce) {
   .contact-links a,
   .contact-links .copy,
-  .game,
-  .build,
+  .game-media,
+  .build img,
   .game-media img { transition: none; }
-  .game:hover,
-  .build:hover,
-  .game:hover .game-media img { transform: none; }
+  .game-media:hover,
+  .build img:hover,
+  .game-media:hover img { transform: none; }
   /* Reveals keep a short fade but drop the movement. */
   .js .reveal { transform: none; }
   .js .reveal.is-in { transition: opacity 200ms ease; transition-delay: 0ms; }
