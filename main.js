@@ -22,6 +22,7 @@ const roleArea = {
   "map building": "3d",
   "building": "3d",
   "vfx": "visual",
+  "impact frames": "visual",
   "animation": "visual",
   "ui/ux": "visual",
   "ui": "visual",
