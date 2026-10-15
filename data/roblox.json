@@ -1,14 +1,14 @@
 {
-  "updated": "2026-10-14T09:44:15.404Z",
+  "updated": "2026-10-15T04:18:43.973Z",
   "avatar": "https://tr.rbxcdn.com/30DAY-AvatarHeadshot-820B3E8C7800AEBE1850D537122C8EFB-Png/420/420/AvatarHeadshot/Png/noFilter",
-  "totalVisits": 28769,
-  "gameCount": 1,
+  "totalVisits": 28804,
+  "gameCount": 2,
   "games": {
     "139369528722370": {
       "name": "Pull a Planet🪐 ",
       "creator": "OGU Games",
-      "visits": 28769,
-      "playing": 0,
+      "visits": 28802,
+      "playing": 1,
       "favorites": 858,
       "created": "2026-09-21T00:12:32.429Z",
       "updated": "2026-10-13T16:17:00.829Z",
@@ -18,6 +18,22 @@
         "https://tr.rbxcdn.com/180DAY-4a480dd13b800c8deba50e720c6c8bea/768/432/Image/Png/noFilter",
         "https://tr.rbxcdn.com/180DAY-a21c08ffd10929a97fda488cb50d3300/768/432/Image/Png/noFilter",
         "https://tr.rbxcdn.com/180DAY-6077ee937285312adb3ebd7b24dc8c6f/768/432/Image/Png/noFilter"
+      ]
+    },
+    "78767891782862": {
+      "name": "Chop a Verity",
+      "creator": "OGU Games",
+      "visits": 2,
+      "playing": 0,
+      "favorites": 0,
+      "created": "2026-10-11T22:57:11.661Z",
+      "updated": "2026-10-15T03:57:40.223Z",
+      "url": "https://www.roblox.com/games/78767891782862",
+      "icon": "https://tr.rbxcdn.com/180DAY-e96b878fb401cf742a384aa9718a7674/512/512/Image/Png/noFilter",
+      "thumbnails": [
+        "https://tr.rbxcdn.com/180DAY-6bced10c337ba123e4addea888d1d0cf/768/432/Image/Png/noFilter",
+        "https://tr.rbxcdn.com/180DAY-f7286876bd65a909ae4de9b452520d08/768/432/Image/Png/noFilter",
+        "https://tr.rbxcdn.com/180DAY-2307dcdfed17880c2c03475511621f29/768/432/Image/Png/noFilter"
       ]
     }
   }

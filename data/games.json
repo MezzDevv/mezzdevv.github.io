@@ -5,22 +5,35 @@
       "title": "Pull a Planet",
       "status": "Live",
       "duo": true,
-      "role": ["Full-stack scripting", "Modelling", "VFX", "Animation"]
+      "role": [
+        "Full-stack scripting",
+        "Modelling",
+        "VFX",
+        "Animation"
+      ]
+    },
+    {
+      "title": "Chop a Verity",
+      "status": "Live",
+      "duo": true,
+      "placeId": "78767891782862"
     },
     {
       "title": "Anything Arena",
       "status": "In the works",
       "duo": true,
-      "role": ["Project lead", "Full-stack scripting", "Game design", "Map building", "Animation", "UI/UX"],
+      "role": [
+        "Project lead",
+        "Full-stack scripting",
+        "Game design",
+        "Map building",
+        "Animation",
+        "UI/UX"
+      ],
       "blurb": "A first-person arena shooter."
     },
     {
       "title": "+1 Throw a Cube",
-      "status": "In the works",
-      "duo": true
-    },
-    {
-      "title": "Chop a Verity",
       "status": "In the works",
       "duo": true
     }

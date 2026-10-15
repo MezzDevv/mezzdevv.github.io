@@ -165,7 +165,8 @@ function renderGame(g) {
   ];
 
   const stats = [];
-  if (live.visits) stats.push(`${compact.format(live.visits)} visits`);
+  // Brand-new games show no count until it means something.
+  if (live.visits >= 100) stats.push(`${compact.format(live.visits)} visits`);
   if (live.playing) stats.push(`${fmt.format(live.playing)} playing now`);
 
   return el("article", { class: "game" },
