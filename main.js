@@ -100,9 +100,87 @@ function rollUp(node, target) {
   requestAnimationFrame(step);
 }
 
+// ---------- Intro ----------
+// The cloud sits alone and large in the middle of the sky, flies to its spot, then the
+// hero builds bottom-up like Lego: each piece drops from above and lands with a small
+// squash. Click or press any key to skip. Resolves when the page is fully built.
+
+const introDone = playIntro();
+
+function playIntro() {
+  const root = document.documentElement;
+  if (!root.classList.contains("intro")) return Promise.resolve();
+
+  return new Promise((resolve) => {
+    const svg = $("buddy").querySelector("svg");
+    const drops = [".ground", ".hero-links", "#visits", "#tagline", ".hello"]
+      .map((sel) => document.querySelector(sel))
+      .filter(Boolean);
+    const anims = [];
+    const timers = [];
+    let finished = false;
+
+    // Where the cloud lives vs. the middle of the screen, as one transform.
+    const box = svg.getBoundingClientRect();
+    const size = Math.min(window.innerWidth * 0.55, 420);
+    const scale = size / box.width;
+    const dx = window.innerWidth / 2 - (box.left + box.width / 2);
+    const dy = window.innerHeight / 2 - (box.top + box.height / 2);
+    const centered = `translate(${dx}px, ${dy}px) scale(${scale})`;
+
+    svg.style.transformOrigin = "50% 50%";
+    anims.push(svg.animate(
+      [{ transform: `${centered} scale(0.9)`, opacity: 0 }, { transform: centered, opacity: 1 }],
+      { duration: 450, easing: "cubic-bezier(0.23, 1, 0.32, 1)", fill: "forwards" }
+    ));
+    root.classList.add("intro-ready");
+
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      timers.forEach(clearTimeout);
+      anims.forEach((a) => a.finish());
+      anims.forEach((a) => a.cancel());
+      drops.forEach((el) => (el.style.visibility = ""));
+      root.classList.remove("intro", "intro-ready", "intro-out");
+      try { sessionStorage.setItem("introSeen", "1"); } catch {}
+      removeEventListener("pointerdown", finish);
+      removeEventListener("keydown", finish);
+      resolve();
+    };
+    addEventListener("pointerdown", finish);
+    addEventListener("keydown", finish);
+
+    // Two seconds after the page opened, the cloud flies home.
+    const wait = Math.max(0, 2000 - performance.now());
+    timers.push(setTimeout(() => {
+      anims.push(svg.animate(
+        [{ transform: centered, opacity: 1 }, { transform: "none", opacity: 1 }],
+        { duration: 750, easing: "cubic-bezier(0.77, 0, 0.175, 1)", fill: "forwards" }
+      ));
+      timers.push(setTimeout(() => root.classList.add("intro-out"), 250));
+
+      // Then the pieces drop in, bottom piece first.
+      const fall = [
+        { transform: "translateY(-100vh)", easing: "cubic-bezier(0.55, 0, 1, 0.45)" },
+        { transform: "translateY(0) scale(1.03, 0.94)", offset: 0.7, easing: "cubic-bezier(0.23, 1, 0.32, 1)" },
+        { transform: "translateY(-8px) scale(1)", offset: 0.85, easing: "cubic-bezier(0.77, 0, 0.175, 1)" },
+        { transform: "translateY(0)" },
+      ];
+      drops.forEach((el, i) => {
+        el.style.transformOrigin = "50% 100%";
+        el.style.visibility = "visible";
+        anims.push(el.animate(fall, { duration: 650, delay: 450 + i * 120, fill: "backwards" }));
+      });
+      const buildTime = 450 + (drops.length - 1) * 120 + 650;
+      timers.push(setTimeout(finish, buildTime + 50));
+    }, wait));
+  });
+}
+
 const total = roblox?.totalVisits ?? 0;
 if (total > 0) {
-  rollUp($("visits-number"), total);
+  introDone.then(() => rollUp($("visits-number"), total));
   $("visits-label").textContent = "contributed visits";
 } else {
   $("visits").classList.add("is-empty");
@@ -263,20 +341,6 @@ if ("IntersectionObserver" in window) {
     });
   }, { passive: true });
 }
-
-// ---------- Visitor counter ----------
-// Total from GoatCounter's public counter. Stays hidden at zero, or when the visitor's
-// browser blocks GoatCounter (ad and tracker blockers do).
-
-fetch("https://mezz.goatcounter.com/counter/TOTAL.json")
-  .then((r) => (r.ok ? r.json() : null))
-  .then((d) => {
-    const n = Number(String(d?.count ?? "").replace(/\D/g, "")) || 0;
-    if (!n) return;
-    $("visitors").textContent = `${fmt.format(n)} visitor${n === 1 ? "" : "s"}`;
-    $("visitors").hidden = false;
-  })
-  .catch(() => {});
 
 // ---------- Footer ----------
 

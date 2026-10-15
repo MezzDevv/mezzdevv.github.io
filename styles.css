@@ -73,6 +73,36 @@ a:hover { text-decoration-thickness: 2px; }
   padding-inline: var(--gutter);
 }
 
+/* ---------- Intro: the cloud alone in the sky, then the page builds ---------- */
+/* html.intro is set by the inline script in <head>, before first paint. */
+
+html { scrollbar-gutter: stable; }
+html.intro { overflow: hidden; }
+
+/* A full-screen copy of the hero sky. It fades away once the cloud flies home,
+   revealing the identical real sky underneath. */
+html.intro body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background:
+    radial-gradient(ellipse 22rem 5rem at 82% 22%, rgb(255 255 255 / 0.75), transparent 70%),
+    radial-gradient(ellipse 14rem 3.5rem at 70% 30%, rgb(255 255 255 / 0.6), transparent 70%),
+    radial-gradient(ellipse 18rem 4rem at 12% 12%, rgb(255 255 255 / 0.55), transparent 70%),
+    linear-gradient(180deg, var(--sky-top), var(--sky-low));
+  transition: opacity 500ms var(--ease-out);
+}
+html.intro-out body::before { opacity: 0; }
+
+html.intro .buddy { z-index: 60; animation: none; }
+html.intro:not(.intro-ready) .buddy { visibility: hidden; }
+html.intro .drop { visibility: hidden; }
+/* Below the hero waits until the build is done, then fades in. */
+main, .footer { transition: opacity 400ms var(--ease-out); }
+html.intro main,
+html.intro .footer { opacity: 0; }
+
 /* ---------- Hero: a sunny Roblox sky over a studded grass baseplate ---------- */
 
 .world {
@@ -143,24 +173,6 @@ a:hover { text-decoration-thickness: 2px; }
   25% { transform: rotate(-8deg) scale(1.05); }
   75% { transform: rotate(8deg) scale(1.05); }
 }
-
-/* Visitor counter: a small sign in the top-left of the sky. */
-.visitors {
-  position: absolute;
-  top: 1rem;
-  /* Lines up with the content column, not the window edge. */
-  left: max(var(--gutter), calc((100% - var(--wrap)) / 2 + var(--gutter)));
-  z-index: 1;
-  margin: 0;
-  padding: 0.25rem 0.75rem;
-  background: rgb(255 255 255 / 0.85);
-  border: 2px solid var(--black);
-  border-radius: 999px;
-  font-size: 0.85rem;
-  font-weight: 650;
-  font-variant-numeric: tabular-nums;
-}
-.visitors[hidden] { display: none; }
 
 .hero {
   position: relative;
@@ -702,7 +714,6 @@ p { margin: 0 0 1rem; max-width: 62ch; }
   .skill-lead ul { grid-column: 1; grid-row: auto; margin-top: 0.75rem; }
   .jobs ul { grid-template-columns: 1fr; }
   .hello { flex-direction: column; align-items: flex-start; }
-  .hero { padding-top: 4.25rem; }
   .pipeline { grid-template-columns: 1fr; gap: 1.25rem; }
   .pipeline li + li::after {
     right: auto;
