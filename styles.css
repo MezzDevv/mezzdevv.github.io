@@ -144,6 +144,24 @@ a:hover { text-decoration-thickness: 2px; }
   75% { transform: rotate(8deg) scale(1.05); }
 }
 
+/* Visitor counter: a small sign in the top-left of the sky. */
+.visitors {
+  position: absolute;
+  top: 1rem;
+  /* Lines up with the content column, not the window edge. */
+  left: max(var(--gutter), calc((100% - var(--wrap)) / 2 + var(--gutter)));
+  z-index: 1;
+  margin: 0;
+  padding: 0.25rem 0.75rem;
+  background: rgb(255 255 255 / 0.85);
+  border: 2px solid var(--black);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+.visitors[hidden] { display: none; }
+
 .hero {
   position: relative;
   padding-block: clamp(3.5rem, 10vw, 7rem) clamp(2.5rem, 6vw, 4rem);
@@ -684,6 +702,7 @@ p { margin: 0 0 1rem; max-width: 62ch; }
   .skill-lead ul { grid-column: 1; grid-row: auto; margin-top: 0.75rem; }
   .jobs ul { grid-template-columns: 1fr; }
   .hello { flex-direction: column; align-items: flex-start; }
+  .hero { padding-top: 4.25rem; }
   .pipeline { grid-template-columns: 1fr; gap: 1.25rem; }
   .pipeline li + li::after {
     right: auto;

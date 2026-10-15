@@ -264,6 +264,19 @@ if ("IntersectionObserver" in window) {
   }, { passive: true });
 }
 
+// ---------- Visitor counter ----------
+// Total from GoatCounter's public counter. Stays hidden if it can't be reached.
+
+fetch("https://mezz.goatcounter.com/counter/TOTAL.json")
+  .then((r) => (r.ok ? r.json() : null))
+  .then((d) => {
+    const n = Number(String(d?.count ?? "").replace(/\D/g, ""));
+    if (!n) return;
+    $("visitors").textContent = `${fmt.format(n)} visitor${n === 1 ? "" : "s"}`;
+    $("visitors").hidden = false;
+  })
+  .catch(() => {});
+
 // ---------- Footer ----------
 
 $("updated").textContent = roblox?.updated
