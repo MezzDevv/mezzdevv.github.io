@@ -9,7 +9,8 @@
         "Full-stack scripting",
         "Modelling",
         "VFX",
-        "Animation"
+        "Animation",
+        "UI/UX"
       ]
     },
     {
@@ -40,7 +41,29 @@
     {
       "title": "+1 Throw a Cube",
       "status": "In the works",
-      "duo": true
+      "duo": true,
+      "role": [
+        "Full-stack scripting",
+        "Modelling",
+        "Map building",
+        "Animation",
+        "UI/UX"
+      ]
+    },
+    {
+      "title": "Fish an Egg",
+      "status": "In the works",
+      "duo": true,
+      "role": [
+        "Project lead",
+        "Game design",
+        "Full-stack scripting",
+        "Modelling",
+        "Map building",
+        "VFX",
+        "Animation",
+        "UI/UX"
+      ]
     }
   ]
 }
