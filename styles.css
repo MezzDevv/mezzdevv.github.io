@@ -635,6 +635,7 @@ p { margin: 0 0 1rem; max-width: 62ch; }
   transform: translateY(0.1rem);
 }
 .agents strong { font-weight: 750; }
+.agent-credit { color: var(--muted); font-size: 0.85rem; font-weight: 500; }
 .agent-name { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 0.5rem; }
 .agents li > span:last-child { grid-column: 2; color: var(--ink); font-size: 0.95rem; }
 .agent-wip {
