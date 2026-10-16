@@ -393,6 +393,7 @@ p { margin: 0 0 1rem; max-width: 62ch; }
 .skill-3d     { --area-bg: var(--area-3d); }
 .skill-visual { --area-bg: var(--area-visual); }
 .skill-sound  { --area-bg: var(--area-sound); }
+.skill-design { --area-bg: var(--area-lead); }
 
 .skill-lead {
   grid-column: 1 / -1;
