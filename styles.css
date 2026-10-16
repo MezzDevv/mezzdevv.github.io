@@ -692,6 +692,31 @@ p { margin: 0 0 1rem; max-width: 62ch; }
   background: var(--area-bg);
   transform: translateY(0.1rem);
 }
+/* Hover pop: the card swells outward from its own centre with a springy overshoot,
+   then settles. Mouse only; reduced-motion visitors get no movement. */
+.agents li {
+  transform-origin: 50% 50%;
+  transition: transform 380ms cubic-bezier(0.34, 1.8, 0.64, 1), box-shadow 200ms var(--ease-out);
+}
+/* Browsers that support spring curves get a real bounce: overshoot, dip back, settle. */
+@supports (transition-timing-function: linear(0, 1)) {
+  .agents li {
+    transition: transform 550ms linear(0, 0.5 8%, 1.25 22%, 1.32 30%, 1.1 45%, 0.95 60%, 1.02 75%, 1),
+                box-shadow 200ms var(--ease-out);
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+  .agents li:hover {
+    transform: scale(1.06);
+    box-shadow: 4px 4px 0 var(--black);
+    position: relative;
+    z-index: 2;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .agents li { transition: box-shadow 200ms ease; }
+  .agents li:hover { transform: none; }
+}
 .agents strong { font-weight: 750; }
 /* An odd card out on the last row sits centred instead of hanging left. */
 @media (min-width: 44.01rem) {
