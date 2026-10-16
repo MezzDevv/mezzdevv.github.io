@@ -428,27 +428,63 @@ p { margin: 0 0 1rem; max-width: 62ch; }
 
 .skill-clip { margin: 0 0 1rem; }
 
-/* Tabs that swap which clip a card plays. */
+/* Tabs that swap which clip a card plays. They look like the site's other brick
+   buttons (hard shadow = "you can press this"), and the chosen one sits pressed in. */
 .clip-tabs {
   display: flex;
-  gap: 0.4rem;
-  margin-top: 0.6rem;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+.clip-tabs::before {
+  content: "Watch:";
+  font-size: 0.85rem;
+  font-weight: 650;
+  color: var(--muted);
 }
 .clip-tabs button {
-  padding: 0.15rem 0.7rem;
-  border: 1.5px solid var(--black);
-  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.8rem;
+  border: 2px solid var(--black);
+  border-radius: var(--radius);
   background: #fff;
   color: var(--ink);
-  font: 650 0.85rem/1.4 var(--font);
+  font: 700 0.85rem/1.3 var(--font);
   cursor: pointer;
-  transition: transform 160ms var(--ease-out), background-color 160ms ease;
+  box-shadow: 3px 3px 0 var(--black);
+  transition: transform 160ms var(--ease-out), box-shadow 160ms var(--ease-out), background-color 160ms ease;
 }
-.clip-tabs button[aria-pressed="true"] { background: var(--black); color: #fff; }
-.clip-tabs button:active { transform: scale(0.96); }
+/* A small play triangle on the clips you can switch to. */
+.clip-tabs button[aria-pressed="false"]::before {
+  content: "";
+  width: 0;
+  height: 0;
+  border-left: 7px solid currentColor;
+  border-top: 4.5px solid transparent;
+  border-bottom: 4.5px solid transparent;
+}
+.clip-tabs button[aria-pressed="true"] {
+  background: var(--black);
+  color: #fff;
+  transform: translate(3px, 3px);
+  box-shadow: 0 0 0 var(--black);
+  cursor: default;
+}
 @media (hover: hover) and (pointer: fine) {
-  .clip-tabs button[aria-pressed="false"]:hover { background: var(--area-bg, #f1f1f1); }
+  .clip-tabs button[aria-pressed="false"]:hover {
+    background: var(--bright-yellow);
+    transform: translate(1px, 1px);
+    box-shadow: 2px 2px 0 var(--black);
+  }
 }
+.clip-tabs button[aria-pressed="false"]:active {
+  transform: translate(3px, 3px);
+  box-shadow: 0 0 0 var(--black);
+}
+
 .skill-clip video,
 .skill-clip img {
   display: block;
