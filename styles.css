@@ -704,8 +704,15 @@ p { margin: 0 0 1rem; max-width: 62ch; }
   list-style: none;
   counter-reset: step;
 }
+/* The li holds the connector line; the .brick inside is what you see (and what pops),
+   so the lines between bricks stay put on hover. */
 .pipeline li {
   position: relative;
+  display: flex;
+  counter-increment: step;
+}
+.pipeline .brick {
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -714,9 +721,8 @@ p { margin: 0 0 1rem; max-width: 62ch; }
   border: 2px solid var(--black);
   border-radius: var(--radius);
   box-shadow: 4px 4px 0 var(--black);
-  counter-increment: step;
 }
-.pipeline li::before {
+.pipeline .brick::before {
   content: counter(step);
   font-size: 0.8rem;
   font-weight: 700;
@@ -732,8 +738,8 @@ p { margin: 0 0 1rem; max-width: 62ch; }
   height: 3px;
   background: var(--black);
 }
-.pipeline-crew { background: var(--sky-low) !important; }
-.pipeline-me { background: var(--bright-yellow) !important; }
+.pipeline-crew .brick { background: var(--sky-low); }
+.pipeline-me .brick { background: var(--bright-yellow); }
 .step { font-weight: 750; font-variation-settings: "wdth" 108; }
 .step-note { font-size: 0.85rem; color: var(--ink); }
 
@@ -898,9 +904,13 @@ p { margin: 0 0 1rem; max-width: 62ch; }
 }
 
 .agents li,
-.pipeline li,
+.pipeline .brick,
 .game-media,
 .build img,
+.skill-clip video,
+.skill-clip img,
+.avatar,
+.part,
 .contact-links a,
 .contact-links .copy,
 .clip-tabs button[aria-pressed="false"] {
@@ -909,9 +919,13 @@ p { margin: 0 0 1rem; max-width: 62ch; }
 }
 @media (hover: hover) and (pointer: fine) {
   .agents li:hover,
-  .pipeline li:hover,
+  .pipeline .brick:hover,
   .game-media:hover,
   .build img:hover,
+  .skill-clip video:hover,
+  .skill-clip img:hover,
+  .avatar:hover,
+  .part:hover,
   .contact-links a:hover,
   .contact-links .copy:hover,
   .clip-tabs button[aria-pressed="false"]:hover {
@@ -921,7 +935,26 @@ p { margin: 0 0 1rem; max-width: 62ch; }
     z-index: 2;
   }
   .clip-tabs button[aria-pressed="false"]:hover { background: var(--bright-yellow); }
+  /* The avatar tilts a little as it pops. */
+  .avatar:hover { transform: scale(1.06) rotate(-3deg); }
+  .part:hover { box-shadow: 8px 8px 0 var(--black); }
+
+  /* Smaller touches for everything else. */
+  /* Skill cards and the Q&A box: the shadow grows in (their pictures do the popping). */
+  .skill:hover,
+  .faq:hover { box-shadow: 5px 5px 0 var(--black); }
+  /* Tags bounce up a touch. */
+  .game-tags li:hover { transform: scale(1.1); }
+  /* Hire-list squares spin a quarter turn. */
+  .jobs li:hover::before { transform: translateY(0.1rem) rotate(90deg) scale(1.25); }
+  /* The cloud perks up. */
+  .buddy:hover svg { transform: scale(1.08) rotate(4deg); }
 }
+.skill,
+.faq { transition: box-shadow 200ms var(--ease-out); }
+.game-tags li,
+.jobs li::before,
+.buddy svg { transition: transform 550ms var(--spring); }
 .contact-links a:active,
 .contact-links .copy:active,
 .clip-tabs button[aria-pressed="false"]:active {
@@ -932,11 +965,15 @@ h1, h2, h3 { text-wrap: balance; }
 p, li { text-wrap: pretty; }
 
 @media (prefers-reduced-motion: reduce) {
-  .agents li, .pipeline li, .game-media, .build img,
+  .agents li, .pipeline .brick, .game-media, .build img, .skill-clip video, .skill-clip img,
+  .avatar, .part, .game-tags li, .jobs li::before, .buddy svg,
   .contact-links a, .contact-links .copy, .clip-tabs button { transition: box-shadow 200ms ease, background-color 160ms ease; }
-  .agents li:hover, .pipeline li:hover, .game-media:hover, .build img:hover,
+  .agents li:hover, .pipeline .brick:hover, .game-media:hover, .build img:hover,
+  .skill-clip video:hover, .skill-clip img:hover, .avatar:hover, .part:hover, .game-tags li:hover,
+  .buddy:hover svg,
   .contact-links a:hover, .contact-links .copy:hover, .clip-tabs button:hover,
   .contact-links a:active, .contact-links .copy:active, .clip-tabs button:active { transform: none; }
+  .jobs li:hover::before { transform: translateY(0.1rem); }
   /* Reveals keep a short fade but drop the movement. */
   .js .reveal { transform: none; }
   .js .reveal.is-in { transition: opacity 200ms ease; transition-delay: 0ms; }
