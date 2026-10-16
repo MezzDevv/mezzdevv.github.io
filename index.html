@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=202610150345">
+  <link rel="stylesheet" href="styles.css?v=202610152042">
   <script>
     // Intro plays once per visit (per tab session), never for reduced-motion visitors.
     // The timeout is a safety net: if the page script fails, content still appears.
@@ -117,7 +117,16 @@
       <div class="wrap section workshop">
       <h2 id="workshop-h">My pipeline</h2>
       <p class="workshop-punch">I use AI in my work.</p>
-      <p class="workshop-lead">I built my own pipeline for it: a team of AI agents with one job each. One scripts, one builds UI in each game's own style, one makes VFX, one models in Blender and brings the models into Studio, and one picks the sound. Another that generates brand-new sound effects is in the works.</p>
+      <p class="workshop-lead">I built my own pipeline for it: a team of AI agents with one job each.</p>
+      <ul class="agents">
+        <li class="skill-code"><span class="agent-name"><strong>Scripting</strong></span><span>writes the Luau for every system</span></li>
+        <li class="skill-visual"><span class="agent-name"><strong>UI</strong></span><span>builds menus and HUDs in each game's own style</span></li>
+        <li class="skill-visual"><span class="agent-name"><strong>VFX</strong></span><span>makes the effects and impact frames</span></li>
+        <li class="skill-3d"><span class="agent-name"><strong>3D modelling</strong></span><span>models in Blender and brings the models into Studio</span></li>
+        <li class="skill-sound"><span class="agent-name"><strong>Sound</strong></span><span>picks the right sound for each moment</span></li>
+        <li class="skill-sound"><span class="agent-name"><strong>Sound effects</strong> <span class="agent-wip"><span class="status-dot" aria-hidden="true"></span>In the works</span></span><span>generates brand-new sound effects</span></li>
+        <li class="skill-code"><span class="agent-name"><strong>Progression curves</strong> <span class="agent-wip"><span class="status-dot" aria-hidden="true"></span>In the works</span></span><span>builds a reusable progression formula that keeps a game fast and fun</span></li>
+      </ul>
       <p class="workshop-lead">They work directly inside Roblox Studio and follow rules I wrote from the games I've shipped, and a panel of AI reviewers checks the Luau before it reaches me. I pick what gets built, and I read, test and fix everything before it goes out.</p>
 
       <ol class="pipeline" aria-label="How a game moves through my pipeline">
@@ -167,7 +176,7 @@
     <p id="updated"></p>
   </footer>
 
-  <script src="main.js?v=202610150345" type="module"></script>
+  <script src="main.js?v=202610152042" type="module"></script>
   <script data-goatcounter="https://mezz.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
