@@ -207,6 +207,24 @@ if (reduceMotion) {
   }
 }
 
+// Clip tabs: a card can hold several clips; the tabs swap which one plays.
+for (const fig of document.querySelectorAll("[data-clip-switch]")) {
+  const video = fig.querySelector("video");
+  const caption = fig.querySelector("figcaption");
+  const tabs = [...fig.querySelectorAll(".clip-tabs button")];
+  for (const tab of tabs) {
+    tab.addEventListener("click", () => {
+      if (tab.getAttribute("aria-pressed") === "true") return;
+      tabs.forEach((t) => t.setAttribute("aria-pressed", String(t === tab)));
+      video.poster = tab.dataset.poster;
+      video.src = tab.dataset.src;
+      video.setAttribute("aria-label", tab.dataset.alt);
+      caption.textContent = tab.dataset.caption;
+      if (!reduceMotion) video.play().catch(() => {});
+    });
+  }
+}
+
 // ---------- Cloud buddy ----------
 
 const buddyLines = ["I love Cinnamoroll", "zzz…", "hi!", "five more minutes", "*yawn*", "go play Pull a Planet", "☁️"];

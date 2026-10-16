@@ -427,6 +427,28 @@ p { margin: 0 0 1rem; max-width: 62ch; }
 .skill p { color: var(--ink); margin-bottom: 0; }
 
 .skill-clip { margin: 0 0 1rem; }
+
+/* Tabs that swap which clip a card plays. */
+.clip-tabs {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+}
+.clip-tabs button {
+  padding: 0.15rem 0.7rem;
+  border: 1.5px solid var(--black);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ink);
+  font: 650 0.85rem/1.4 var(--font);
+  cursor: pointer;
+  transition: transform 160ms var(--ease-out), background-color 160ms ease;
+}
+.clip-tabs button[aria-pressed="true"] { background: var(--black); color: #fff; }
+.clip-tabs button:active { transform: scale(0.96); }
+@media (hover: hover) and (pointer: fine) {
+  .clip-tabs button[aria-pressed="false"]:hover { background: var(--area-bg, #f1f1f1); }
+}
 .skill-clip video,
 .skill-clip img {
   display: block;

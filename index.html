@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=202610152239">
+  <link rel="stylesheet" href="styles.css?v=202610152304">
   <script>
     // Intro plays once per visit (per tab session), never for reduced-motion visitors.
     // The timeout is a safety net: if the page script fails, content still appears.
@@ -91,8 +91,12 @@
           <p>Building in Studio and modelling in Blender: maps, props, and whatever else the gameplay needs.</p>
         </article>
         <article class="skill skill-visual">
-          <figure class="skill-clip">
+          <figure class="skill-clip" data-clip-switch>
             <video src="media/impact-frames.mp4" poster="media/impact-frames-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Impact frames as a cube smashes through a wall"></video>
+            <div class="clip-tabs" role="group" aria-label="Choose a clip">
+              <button type="button" aria-pressed="true" data-src="media/impact-frames.mp4" data-poster="media/impact-frames-poster.jpg" data-alt="Impact frames as a cube smashes through a wall" data-caption="Impact frames from +1 Throw a Cube">Impact frames</button>
+              <button type="button" aria-pressed="false" data-src="media/ui-pets.mp4" data-poster="media/ui-pets-poster.jpg" data-alt="Pet inventory screen: picking pets, equipping and unequipping them" data-caption="Pet inventory UI">UI</button>
+            </div>
             <figcaption>Impact frames from +1 Throw a Cube</figcaption>
           </figure>
           <h3>Visual</h3>
@@ -177,7 +181,7 @@
     <p id="updated"></p>
   </footer>
 
-  <script src="main.js?v=202610152239" type="module"></script>
+  <script src="main.js?v=202610152304" type="module"></script>
   <script data-goatcounter="https://mezz.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
