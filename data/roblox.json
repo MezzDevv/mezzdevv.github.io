@@ -1,14 +1,14 @@
 {
-  "updated": "2026-10-17T09:50:22.149Z",
+  "updated": "2026-10-18T07:11:27.519Z",
   "avatar": "https://tr.rbxcdn.com/30DAY-AvatarHeadshot-820B3E8C7800AEBE1850D537122C8EFB-Png/420/420/AvatarHeadshot/Png/noFilter",
-  "totalVisits": 30383,
-  "gameCount": 2,
+  "totalVisits": 37279,
+  "gameCount": 3,
   "games": {
     "139369528722370": {
       "name": "Pull a Planet🪐 ",
       "creator": "OGU Games",
-      "visits": 29007,
-      "playing": 1,
+      "visits": 29079,
+      "playing": 0,
       "favorites": 860,
       "created": "2026-09-21T00:12:32.429Z",
       "updated": "2026-10-13T16:17:00.829Z",
@@ -23,9 +23,9 @@
     "78767891782862": {
       "name": "Chop a Verity",
       "creator": "OGU Games",
-      "visits": 1376,
+      "visits": 2381,
       "playing": 1,
-      "favorites": 5,
+      "favorites": 7,
       "created": "2026-10-11T22:57:11.661Z",
       "updated": "2026-10-16T21:04:16.44Z",
       "url": "https://www.roblox.com/games/78767891782862",
@@ -34,6 +34,21 @@
         "https://tr.rbxcdn.com/180DAY-6bced10c337ba123e4addea888d1d0cf/768/432/Image/Png/noFilter",
         "https://tr.rbxcdn.com/180DAY-f7286876bd65a909ae4de9b452520d08/768/432/Image/Png/noFilter",
         "https://tr.rbxcdn.com/180DAY-2307dcdfed17880c2c03475511621f29/768/432/Image/Png/noFilter"
+      ]
+    },
+    "113313528790663": {
+      "name": "[🥚] Sell Eggs to Build a Nuke",
+      "creator": "Mezzin' Around",
+      "visits": 5819,
+      "playing": 0,
+      "favorites": 122,
+      "created": "2026-09-08T02:53:26.154Z",
+      "updated": "2026-10-11T21:15:35.11Z",
+      "url": "https://www.roblox.com/games/113313528790663",
+      "icon": "https://tr.rbxcdn.com/180DAY-769511170b2441f64375e87a25d630ca/512/512/Image/Png/noFilter",
+      "thumbnails": [
+        "https://tr.rbxcdn.com/180DAY-a6987ae6ae0edaa361a48d696f6f8e2e/768/432/Image/Png/noFilter",
+        "https://tr.rbxcdn.com/180DAY-4c5f71e0ff25841ca90a73fc23caa64b/768/432/Image/Png/noFilter"
       ]
     }
   }

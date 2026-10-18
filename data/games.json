@@ -15,7 +15,7 @@
     },
     {
       "title": "Chop a Verity",
-      "status": "Live",
+      "status": "Retired",
       "duo": true,
       "placeId": "78767891782862",
       "role": [
@@ -59,6 +59,21 @@
         "Full-stack scripting",
         "Modelling",
         "Map building",
+        "VFX",
+        "Animation",
+        "UI/UX"
+      ]
+    },
+    {
+      "placeId": "113313528790663",
+      "title": "Sell Eggs to Build a Nuke",
+      "status": "Retired",
+      "role": [
+        "Project lead",
+        "Game design",
+        "Full-stack scripting",
+        "Map building",
+        "Modelling",
         "VFX",
         "Animation",
         "UI/UX"

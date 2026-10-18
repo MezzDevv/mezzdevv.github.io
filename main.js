@@ -68,7 +68,7 @@ if (roblox?.avatar) {
 // public URL) copies the handle instead.
 function linkNode(l) {
   const text = l.handle ? `${l.label}: ${l.handle}` : l.label;
-  if (l.url) return el("a", { href: l.url, rel: "me noopener" }, text);
+  if (l.url) return el("a", { href: l.url, target: "_blank", rel: "me noopener" }, text);
 
   const button = el("button", { type: "button", class: "copy" }, text);
   button.addEventListener("click", async () => {
@@ -299,7 +299,7 @@ function renderGame(g) {
     el("ul", { class: "game-tags" }, tags),
     g.blurb ? el("p", {}, g.blurb) : null,
     stats.length ? el("p", { class: "game-stats" }, stats.join(", ")) : null,
-    url && (isLive || isRetired) ? el("a", { href: url }, `Play ${title} on Roblox`) : null
+    url && (isLive || isRetired) ? el("a", { href: url, target: "_blank", rel: "noopener" }, `Play ${title} on Roblox`) : null
   );
 }
 
