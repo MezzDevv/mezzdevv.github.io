@@ -1,11 +1,3 @@
 {
-  "builds": [
-    {
-      "title": "Main map",
-      "game": "+1 Throw a Cube",
-      "note": "Coming soon",
-      "image": "media/map-build-1.webp",
-      "alt": "Blocky green strength-sim map with training pads, leaderboards, a waterfall and a yellow throwing lane"
-    }
-  ]
+  "builds": []
 }
