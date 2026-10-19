@@ -1,5 +1,12 @@
 // Renders the page from the files in data/. Edit those, not this.
 
+// Motion (motion.dev) drives the interruptible bits. It loads alongside the page and
+// everything has a plain fallback, so a slow or blocked CDN never holds anything up.
+let motion = null;
+import("https://cdn.jsdelivr.net/npm/motion@13.5.1/+esm")
+  .then((m) => (motion = m))
+  .catch(() => {});
+
 const load = (path) =>
   fetch(path, { cache: "no-cache" })
     .then((r) => (r.ok ? r.json() : null))
@@ -75,10 +82,15 @@ function linkNode(l) {
     try {
       await navigator.clipboard.writeText(l.handle);
       button.textContent = `Copied ${l.handle}`;
+      button.classList.add("is-copied");
     } catch {
       button.textContent = text;
     }
-    setTimeout(() => (button.textContent = text), 1800);
+    clearTimeout(button.resetTimer);
+    button.resetTimer = setTimeout(() => {
+      button.textContent = text;
+      button.classList.remove("is-copied");
+    }, 1800);
   });
   return button;
 }
@@ -207,20 +219,35 @@ if (reduceMotion) {
   }
 }
 
-// Clip tabs: a card can hold several clips; the tabs swap which one plays.
+// Clip tabs: a card can hold several clips; the tabs swap which one plays. The clip
+// dips to black, swaps while dark, and comes back up once the new one has a frame.
 for (const fig of document.querySelectorAll("[data-clip-switch]")) {
   const video = fig.querySelector("video");
   const caption = fig.querySelector("figcaption");
   const tabs = [...fig.querySelectorAll(".clip-tabs button")];
+  let swapTimer, revealTimer;
+  const reveal = () => {
+    clearTimeout(revealTimer);
+    video.classList.remove("is-swapping");
+  };
+  video.addEventListener("loadeddata", reveal);
   for (const tab of tabs) {
     tab.addEventListener("click", () => {
       if (tab.getAttribute("aria-pressed") === "true") return;
       tabs.forEach((t) => t.setAttribute("aria-pressed", String(t === tab)));
-      video.poster = tab.dataset.poster;
-      video.src = tab.dataset.src;
-      video.setAttribute("aria-label", tab.dataset.alt);
       caption.textContent = tab.dataset.caption;
-      if (!reduceMotion) video.play().catch(() => {});
+      const swap = () => {
+        video.poster = tab.dataset.poster;
+        video.src = tab.dataset.src;
+        video.setAttribute("aria-label", tab.dataset.alt);
+        if (!reduceMotion) video.play().catch(() => {});
+        revealTimer = setTimeout(reveal, 600); // don't stay dark if the clip is slow
+      };
+      clearTimeout(swapTimer);
+      clearTimeout(revealTimer);
+      if (reduceMotion) return swap();
+      video.classList.add("is-swapping");
+      swapTimer = setTimeout(swap, 140);
     });
   }
 }
@@ -230,15 +257,38 @@ for (const fig of document.querySelectorAll("[data-clip-switch]")) {
 const buddyLines = ["I love Cinnamoroll", "zzz…", "hi!", "five more minutes", "*yawn*", "go play Pull a Planet", "☁️"];
 let buddyIndex = 0;
 let buddyTimer;
+let buddySaying = false;
 $("buddy").addEventListener("click", () => {
   const buddy = $("buddy");
+  const art = buddy.querySelector(".buddy-art");
   const say = $("buddy-say");
-  buddy.classList.remove("is-awake");
-  void buddy.offsetWidth; // restart the wiggle
-  buddy.classList.add("is-awake");
   say.textContent = buddyLines[buddyIndex++ % buddyLines.length];
-  say.classList.add("is-showing");
   clearTimeout(buddyTimer);
+
+  if (motion && !reduceMotion) {
+    // Each wiggle starts from wherever the last one left off (null = current value),
+    // so fast clicking never snaps. The bubble springs up from its tail.
+    motion.animate(art,
+      { rotate: [null, -9, 7, -3, 0], scale: [null, 1.07, 1.04, 1.01, 1] },
+      { duration: 0.55, ease: "easeInOut" });
+    motion.animate(say,
+      { opacity: 1, scale: [buddySaying ? 0.88 : 0.6, 1], y: [6, 0] },
+      { type: "spring", visualDuration: 0.3, bounce: 0.45, opacity: { duration: 0.15 } });
+    buddySaying = true;
+    buddyTimer = setTimeout(() => {
+      buddySaying = false;
+      motion.animate(say, { opacity: 0, scale: 0.92, y: 3 }, { duration: 0.15, ease: "easeIn" });
+    }, 1600);
+    return;
+  }
+
+  // Without Motion (or with reduced motion): CSS wiggle and a plain fade.
+  if (!reduceMotion) {
+    buddy.classList.remove("is-awake");
+    void buddy.offsetWidth; // restart the wiggle
+    buddy.classList.add("is-awake");
+  }
+  say.classList.add("is-showing");
   buddyTimer = setTimeout(() => say.classList.remove("is-showing"), 1600);
 });
 
@@ -299,7 +349,7 @@ function renderGame(g) {
     el("ul", { class: "game-tags" }, tags),
     g.blurb ? el("p", {}, g.blurb) : null,
     stats.length ? el("p", { class: "game-stats" }, stats.join(", ")) : null,
-    url && (isLive || isRetired) ? el("a", { href: url, target: "_blank", rel: "noopener" }, `Play ${title} on Roblox`) : null
+    url && (isLive || isRetired) ? el("a", { href: url, target: "_blank", rel: "noopener", class: "game-play" }, `Play ${title} on Roblox`) : null
   );
 }
 
@@ -323,7 +373,9 @@ $("builds").replaceChildren(
 if (site) {
   const open = site.commissions?.open;
   const status = $("commission-status");
-  status.textContent = open ? "Open for commissions" : "Commissions closed for now";
+  status.replaceChildren(
+    el("span", { class: "status-dot", "aria-hidden": "true" }),
+    open ? "Open for commissions" : "Commissions closed for now");
   status.classList.toggle("is-open", !!open);
   $("commission-note").textContent = site.commissions?.note ?? "";
 
@@ -338,7 +390,7 @@ if (site) {
 // Cards drop in once as they first scroll into view, staggered within each group.
 // Cards already on screen at load show immediately (no animation on first paint).
 
-const revealGroups = [".skills > .skill", ".jobs", ".pipeline > li", "#games > .game", "#builds > .build"];
+const revealGroups = [".skills > .skill", ".jobs", ".agents > li", ".pipeline > li", "#games > .game", "#builds > .build"];
 if ("IntersectionObserver" in window) {
   const seen = new IntersectionObserver((entries) => {
     for (const e of entries) {
@@ -370,19 +422,22 @@ if ("IntersectionObserver" in window) {
   // A jump past a section (a link, a fast fling) never makes its cards "intersect",
   // so on scroll, show anything already above the screen as-is rather than leave a hole.
   let queued = false;
-  window.addEventListener("scroll", () => {
+  const catchUp = () => {
     if (queued) return;
     queued = true;
     requestAnimationFrame(() => {
       queued = false;
-      for (const node of document.querySelectorAll(".reveal:not(.is-in)")) {
+      const waiting = document.querySelectorAll(".reveal:not(.is-in)");
+      if (waiting.length === 0) window.removeEventListener("scroll", catchUp);
+      for (const node of waiting) {
         if (node.getBoundingClientRect().bottom > 0) continue;
         node.classList.remove("reveal");
         node.style.removeProperty("--i");
         seen.unobserve(node);
       }
     });
-  }, { passive: true });
+  };
+  window.addEventListener("scroll", catchUp, { passive: true });
 }
 
 // ---------- Footer ----------
