@@ -39,7 +39,8 @@
     },
     {
       "title": "+1 Throw a Cube",
-      "status": "In the works",
+      "status": "Live",
+      "placeId": "98274682493735",
       "duo": true,
       "role": [
         "Full-stack scripting",
