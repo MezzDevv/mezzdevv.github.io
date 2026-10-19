@@ -1,1 +1,6 @@
 media/Medal_*
+
+# Claude workspace files. Local only: Pages would publish CLAUDE.md.
+CLAUDE.md
+.claude/
+.mcp.json
