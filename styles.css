@@ -587,21 +587,6 @@ p { margin: 0 0 1rem; max-width: 62ch; }
   font-size: 0.9rem;
 }
 
-/* The hero's hire button: a brick, with the same live light as the commission status. */
-.hero-links .hero-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  padding: 0.6rem 1rem;
-  background: var(--bright-yellow);
-  color: var(--ink);
-  font-weight: 750;
-  text-decoration: none;
-  border: 2px solid var(--black);
-  border-radius: var(--radius);
-  box-shadow: 4px 4px 0 var(--black);
-}
-.hero-cta .status-dot { --dot: #4b974b; width: 0.65rem; height: 0.65rem; }
 
 .game h3 { margin-top: 0.9rem; }
 
@@ -977,7 +962,6 @@ p { margin: 0 0 1rem; max-width: 62ch; }
 .contact-links a,
 .contact-links .copy,
 .game-play,
-.hero-cta,
 .clip-tabs button[aria-pressed="false"] {
   transform-origin: 50% 50%;
   transition: transform 550ms var(--spring), box-shadow 200ms var(--ease-out), background-color 160ms ease;
@@ -994,7 +978,6 @@ p { margin: 0 0 1rem; max-width: 62ch; }
   .contact-links a:hover,
   .contact-links .copy:hover,
   .game-play:hover,
-  .hero-cta:hover,
   .clip-tabs button[aria-pressed="false"]:hover {
     transform: scale(1.06);
     box-shadow: 5px 5px 0 var(--black);
@@ -1026,7 +1009,6 @@ p { margin: 0 0 1rem; max-width: 62ch; }
 .contact-links a:active,
 .contact-links .copy:active,
 .game-play:active,
-.hero-cta:active,
 .hero-links .copy:active,
 .clip-tabs button[aria-pressed="false"]:active {
   transform: scale(0.96);
@@ -1150,10 +1132,22 @@ html:has(.sheet[open]) { overflow: hidden; }
   border-radius: 50%;
   background: #fff;
   color: var(--ink);
-  font: 700 1.5rem/1 var(--font);
+  display: grid;
+  place-items: center;
+  padding: 0;
   cursor: pointer;
   box-shadow: 3px 3px 0 var(--black);
   transition: transform 550ms var(--spring), box-shadow 200ms var(--ease-out);
+}
+/* Only the cross turns on hover; the button and its shadow stay put. */
+.sheet-close svg {
+  width: 1.15rem;
+  height: 1.15rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3;
+  stroke-linecap: round;
+  transition: transform 550ms var(--spring);
 }
 .sheet-close:active { transform: scale(0.92); transition-duration: 100ms; }
 .sheet-media img,
@@ -1197,7 +1191,8 @@ html:has(.sheet[open]) { overflow: hidden; }
 .sheet-thumbs img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
 @media (hover: hover) and (pointer: fine) {
   .sheet-thumbs button:hover { opacity: 1; }
-  .sheet-close:hover { transform: scale(1.06) rotate(90deg); box-shadow: 4px 4px 0 var(--black); }
+  .sheet-close:hover { transform: scale(1.06); box-shadow: 4px 4px 0 var(--black); }
+  .sheet-close:hover svg { transform: rotate(90deg); }
 }
 .sheet-body { margin-top: 1.25rem; }
 .sheet-body h3 {
@@ -1235,13 +1230,13 @@ p, li { text-wrap: pretty; }
 @media (prefers-reduced-motion: reduce) {
   .agents li, .pipeline .brick, .game-media, .build img, .skill-clip video, .skill-clip img,
   .avatar, .part, .game-tags li, .jobs li::before, .buddy svg,
-  .contact-links a, .contact-links .copy, .clip-tabs button, .game-play, .hero-links .copy, .hero-cta, .hero-cta:active,
+  .contact-links a, .contact-links .copy, .clip-tabs button, .game-play, .hero-links .copy,
   .contact-links a:active, .contact-links .copy:active, .clip-tabs button:active, .game-play:active,
   .hero-links .copy:active { transition: box-shadow 200ms ease, background-color 160ms ease; }
   .agents li:hover, .pipeline .brick:hover, .game-media:hover, .build img:hover,
   .skill-clip video:hover, .skill-clip img:hover, .avatar:hover, .part:hover, .game-tags li:hover,
   .buddy:hover svg,
-  .contact-links a:hover, .contact-links .copy:hover, .clip-tabs button:hover, .game-play:hover, .hero-cta:hover, .hero-cta:active,
+  .contact-links a:hover, .contact-links .copy:hover, .clip-tabs button:hover, .game-play:hover,
   .contact-links a:active, .contact-links .copy:active, .clip-tabs button:active, .game-play:active,
   .hero-links .copy:active { transform: none; }
   .js .pipeline li.reveal::after { transform: none; }
@@ -1256,5 +1251,6 @@ p, li { text-wrap: pretty; }
   .buddy.is-sleeping .buddy-zzz span { opacity: 1; transform: translate(calc(var(--z, 0) * -10px), calc(var(--z, 0) * -12px)); }
   .buddy-zzz span:nth-child(2) { --z: 1; }
   .buddy-zzz span:nth-child(3) { --z: 2; }
-  .fade-img, .sheet::backdrop, .sheet-close, .sheet-thumbs button { transition: none; }
+  .fade-img, .sheet::backdrop, .sheet-close, .sheet-close svg, .sheet-thumbs button { transition: none; }
+  .sheet-close:hover, .sheet-close:active, .sheet-close:hover svg { transform: none; }
 }

@@ -63,12 +63,7 @@ if (site) {
   $("name").textContent = site.name;
   $("tagline").textContent = site.tagline;
 
-  // While commissions are open, the hero leads with a way to hire me.
-  const hire = site.commissions?.open
-    ? el("a", { class: "hero-cta", href: "#commissions" },
-        el("span", { class: "status-dot", "aria-hidden": "true" }), "Open for commissions")
-    : null;
-  $("hero-links").replaceChildren(...[hire, ...site.links.map(linkNode)].filter(Boolean));
+  $("hero-links").replaceChildren(...site.links.map(linkNode));
 }
 
 if (roblox?.avatar) {
@@ -517,7 +512,8 @@ let sheet = null;
 function getSheet() {
   if (sheet) return sheet;
   const dialog = el("dialog", { class: "sheet", "aria-labelledby": "sheet-title" });
-  const close = el("button", { type: "button", class: "sheet-close", "aria-label": "Close" }, "×");
+  const close = el("button", { type: "button", class: "sheet-close", "aria-label": "Close" });
+  close.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17"/></svg>';
   const img = el("img", { class: "sheet-img", alt: "" });
   const media = el("div", { class: "sheet-media" }, img);
   const thumbs = el("div", { class: "sheet-thumbs", role: "group", "aria-label": "Screenshots" });
