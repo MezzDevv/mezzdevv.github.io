@@ -462,7 +462,7 @@ function renderGame(g) {
     ...roles.map((r) => el("li", { class: `tag-${roleArea[r.toLowerCase()] ?? "other"}` }, r)),
   ];
   const play = () =>
-    url && (isLive || isRetired) ? el("a", { href: url, target: "_blank", rel: "noopener", class: "game-play" }, `Play ${title} on Roblox`) : null;
+    url && (isLive || isRetired) ? el("a", { href: url, target: "_blank", rel: "noopener" }, `Play ${title} on Roblox`) : null;
 
   const stats = [];
   // Brand-new games show no count until it means something.

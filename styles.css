@@ -857,8 +857,7 @@ p { margin: 0 0 1rem; max-width: 62ch; }
   list-style: none;
 }
 .contact-links a,
-.contact-links .copy,
-.game-play {
+.contact-links .copy {
   font: inherit;
   cursor: pointer;
   display: inline-block;
@@ -876,13 +875,6 @@ p { margin: 0 0 1rem; max-width: 62ch; }
 .contact-links .is-primary .copy { background: var(--bright-yellow); }
 .contact-links .copy.is-copied { background: #9be07a; }
 
-/* Play links on game cards are brick buttons, sat at the bottom so a row lines up. */
-.game-play {
-  align-self: flex-start;
-  margin-top: auto;
-  background: var(--bright-yellow);
-}
-.game > :has(+ .game-play) { margin-bottom: 1rem; }
 
 /* ---------- Footer ---------- */
 
@@ -961,7 +953,6 @@ p { margin: 0 0 1rem; max-width: 62ch; }
 .part,
 .contact-links a,
 .contact-links .copy,
-.game-play,
 .clip-tabs button[aria-pressed="false"] {
   transform-origin: 50% 50%;
   transition: transform 550ms var(--spring), box-shadow 200ms var(--ease-out), background-color 160ms ease;
@@ -977,7 +968,6 @@ p { margin: 0 0 1rem; max-width: 62ch; }
   .part:hover,
   .contact-links a:hover,
   .contact-links .copy:hover,
-  .game-play:hover,
   .clip-tabs button[aria-pressed="false"]:hover {
     transform: scale(1.06);
     box-shadow: 5px 5px 0 var(--black);
@@ -1008,7 +998,6 @@ p { margin: 0 0 1rem; max-width: 62ch; }
 /* The press is quick so it feels instant; letting go springs back on the slower curve. */
 .contact-links a:active,
 .contact-links .copy:active,
-.game-play:active,
 .hero-links .copy:active,
 .clip-tabs button[aria-pressed="false"]:active {
   transform: scale(0.96);
@@ -1222,7 +1211,6 @@ html:has(.sheet[open]) { overflow: hidden; }
   font-variation-settings: "wdth" 112;
   font-variant-numeric: tabular-nums;
 }
-.sheet .game-play { margin-top: 0.25rem; }
 
 h1, h2, h3 { text-wrap: balance; }
 p, li { text-wrap: pretty; }
@@ -1230,14 +1218,14 @@ p, li { text-wrap: pretty; }
 @media (prefers-reduced-motion: reduce) {
   .agents li, .pipeline .brick, .game-media, .build img, .skill-clip video, .skill-clip img,
   .avatar, .part, .game-tags li, .jobs li::before, .buddy svg,
-  .contact-links a, .contact-links .copy, .clip-tabs button, .game-play, .hero-links .copy,
-  .contact-links a:active, .contact-links .copy:active, .clip-tabs button:active, .game-play:active,
+  .contact-links a, .contact-links .copy, .clip-tabs button, .hero-links .copy,
+  .contact-links a:active, .contact-links .copy:active, .clip-tabs button:active,
   .hero-links .copy:active { transition: box-shadow 200ms ease, background-color 160ms ease; }
   .agents li:hover, .pipeline .brick:hover, .game-media:hover, .build img:hover,
   .skill-clip video:hover, .skill-clip img:hover, .avatar:hover, .part:hover, .game-tags li:hover,
   .buddy:hover svg,
-  .contact-links a:hover, .contact-links .copy:hover, .clip-tabs button:hover, .game-play:hover,
-  .contact-links a:active, .contact-links .copy:active, .clip-tabs button:active, .game-play:active,
+  .contact-links a:hover, .contact-links .copy:hover, .clip-tabs button:hover,
+  .contact-links a:active, .contact-links .copy:active, .clip-tabs button:active,
   .hero-links .copy:active { transform: none; }
   .js .pipeline li.reveal::after { transform: none; }
   .jobs li:hover::before { transform: translateY(0.1rem); }
