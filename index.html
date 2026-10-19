@@ -20,8 +20,8 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=202610190400">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=202610190600">
   <script>
     // Intro plays once per visit (per tab session), never for reduced-motion visitors.
     // The timeout is a safety net: if the page script fails, content still appears.
@@ -40,14 +40,17 @@
     <button class="buddy" id="buddy" type="button" aria-label="Poke the cloud buddy">
       <span class="buddy-art"><svg viewBox="0 0 160 110" aria-hidden="true">
         <path class="buddy-body" d="M38 96c-17 0-30-12-30-27 0-14 11-25 25-27 3-18 18-31 37-31 15 0 28 8 34 21 4-2 8-3 13-3 18 0 33 15 33 33 0 19-15 34-34 34z"/>
-        <g class="buddy-eyes">
-          <path d="M58 62q7 6 14 0"/>
-          <path d="M94 62q7 6 14 0"/>
+        <g class="buddy-face">
+          <g class="buddy-eyes">
+            <path d="M58 62q7 6 14 0"/>
+            <path d="M94 62q7 6 14 0"/>
+          </g>
+          <ellipse class="buddy-cheek" cx="52" cy="73" rx="8" ry="5"/>
+          <ellipse class="buddy-cheek" cx="114" cy="73" rx="8" ry="5"/>
+          <path class="buddy-mouth" d="M78 74q5 5 10 0"/>
         </g>
-        <ellipse class="buddy-cheek" cx="52" cy="73" rx="8" ry="5"/>
-        <ellipse class="buddy-cheek" cx="114" cy="73" rx="8" ry="5"/>
-        <path class="buddy-mouth" d="M78 74q5 5 10 0"/>
       </svg></span>
+      <span class="buddy-zzz" aria-hidden="true"><span>z</span><span>z</span><span>z</span></span>
       <span class="buddy-say" id="buddy-say" aria-live="polite"></span>
     </button>
     <div class="wrap hero">
@@ -188,7 +191,7 @@
     <p id="updated"></p>
   </footer>
 
-  <script src="main.js?v=202610190400" type="module"></script>
+  <script src="main.js?v=202610190600" type="module"></script>
   <script data-goatcounter="https://mezz.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>

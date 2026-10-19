@@ -3,9 +3,9 @@
 // Motion (motion.dev) drives the interruptible bits. It loads alongside the page and
 // everything has a plain fallback, so a slow or blocked CDN never holds anything up.
 let motion = null;
-import("https://cdn.jsdelivr.net/npm/motion@13.5.1/+esm")
+const motionReady = import("https://cdn.jsdelivr.net/npm/motion@13.5.1/+esm")
   .then((m) => (motion = m))
-  .catch(() => {});
+  .catch(() => null);
 
 const load = (path) =>
   fetch(path, { cache: "no-cache" })
@@ -219,58 +219,47 @@ if (reduceMotion) {
   }
 }
 
-// Clip tabs: a card can hold several clips; the tabs swap which one plays. The clip
-// dips to black, swaps while dark, and comes back up once the new one has a frame.
+// Clip tabs: a card can hold several clips; the tabs swap which one plays.
 for (const fig of document.querySelectorAll("[data-clip-switch]")) {
   const video = fig.querySelector("video");
   const caption = fig.querySelector("figcaption");
   const tabs = [...fig.querySelectorAll(".clip-tabs button")];
-  let swapTimer, revealTimer;
-  const reveal = () => {
-    clearTimeout(revealTimer);
-    video.classList.remove("is-swapping");
-  };
-  video.addEventListener("loadeddata", reveal);
   for (const tab of tabs) {
     tab.addEventListener("click", () => {
       if (tab.getAttribute("aria-pressed") === "true") return;
       tabs.forEach((t) => t.setAttribute("aria-pressed", String(t === tab)));
+      video.poster = tab.dataset.poster;
+      video.src = tab.dataset.src;
+      video.setAttribute("aria-label", tab.dataset.alt);
       caption.textContent = tab.dataset.caption;
-      const swap = () => {
-        video.poster = tab.dataset.poster;
-        video.src = tab.dataset.src;
-        video.setAttribute("aria-label", tab.dataset.alt);
-        if (!reduceMotion) video.play().catch(() => {});
-        revealTimer = setTimeout(reveal, 600); // don't stay dark if the clip is slow
-      };
-      clearTimeout(swapTimer);
-      clearTimeout(revealTimer);
-      if (reduceMotion) return swap();
-      video.classList.add("is-swapping");
-      swapTimer = setTimeout(swap, 140);
+      if (!reduceMotion) video.play().catch(() => {});
     });
   }
 }
 
 // ---------- Cloud buddy ----------
+// Click it for a line. It nods off when nobody's around and notices when you come back
+// to the tab. With Motion, its face also follows the cursor.
 
+const buddy = $("buddy");
+const buddyArt = buddy.querySelector(".buddy-art");
+const buddyFace = buddy.querySelector(".buddy-face");
+const say = $("buddy-say");
 const buddyLines = ["I love Cinnamoroll", "zzz…", "hi!", "five more minutes", "*yawn*", "go play Pull a Planet", "☁️"];
 let buddyIndex = 0;
+let buddyClicks = 0;
 let buddyTimer;
 let buddySaying = false;
-$("buddy").addEventListener("click", () => {
-  const buddy = $("buddy");
-  const art = buddy.querySelector(".buddy-art");
-  const say = $("buddy-say");
-  say.textContent = buddyLines[buddyIndex++ % buddyLines.length];
-  clearTimeout(buddyTimer);
+let buddyOnScreen = true;
+let faceRest = null; // set once the face is following the cursor
 
+new IntersectionObserver(([e]) => (buddyOnScreen = e.isIntersecting)).observe(buddy);
+
+function buddySay(text) {
+  say.textContent = text;
+  clearTimeout(buddyTimer);
   if (motion && !reduceMotion) {
-    // Each wiggle starts from wherever the last one left off (null = current value),
-    // so fast clicking never snaps. The bubble springs up from its tail.
-    motion.animate(art,
-      { rotate: [null, -9, 7, -3, 0], scale: [null, 1.07, 1.04, 1.01, 1] },
-      { duration: 0.55, ease: "easeInOut" });
+    // The bubble springs up from its tail; a new line while one is showing just bumps it.
     motion.animate(say,
       { opacity: 1, scale: [buddySaying ? 0.88 : 0.6, 1], y: [6, 0] },
       { type: "spring", visualDuration: 0.3, bounce: 0.45, opacity: { duration: 0.15 } });
@@ -281,16 +270,153 @@ $("buddy").addEventListener("click", () => {
     }, 1600);
     return;
   }
-
-  // Without Motion (or with reduced motion): CSS wiggle and a plain fade.
-  if (!reduceMotion) {
-    buddy.classList.remove("is-awake");
-    void buddy.offsetWidth; // restart the wiggle
-    buddy.classList.add("is-awake");
-  }
   say.classList.add("is-showing");
   buddyTimer = setTimeout(() => say.classList.remove("is-showing"), 1600);
+}
+
+function buddyWiggle() {
+  if (reduceMotion) return;
+  if (motion) {
+    // Each wiggle starts from wherever the last one left off (null = current value),
+    // so fast clicking never snaps.
+    motion.animate(buddyArt,
+      { rotate: [null, -9, 7, -3, 0], scale: [null, 1.07, 1.04, 1.01, 1] },
+      { duration: 0.55, ease: "easeInOut" });
+    return;
+  }
+  buddy.classList.remove("is-awake");
+  void buddy.offsetWidth; // restart the CSS wiggle
+  buddy.classList.add("is-awake");
+}
+
+buddy.addEventListener("click", () => {
+  buddyClicks++;
+  buddyWiggle();
+  wakeBuddy();
+  // Poke it ten times and the sky starts dropping bricks.
+  if (buddyClicks >= 10 && motion && !reduceMotion && rainBricks(buddyClicks === 10 ? 14 : 3)) {
+    if (buddyClicks === 10) return buddySay("uh oh");
+  }
+  buddySay(buddyLines[buddyIndex++ % buddyLines.length]);
 });
+
+// It nods off after 20 seconds with nobody moving, scrolling or typing.
+const SLEEP_AFTER = 20000;
+let sleepTimer;
+let lastActivity = 0;
+function wakeBuddy() {
+  if (buddy.classList.contains("is-sleeping")) {
+    buddy.classList.remove("is-sleeping");
+    faceRest?.(false);
+    if (buddyOnScreen) buddySay("huh? oh, hi");
+  }
+  clearTimeout(sleepTimer);
+  sleepTimer = setTimeout(() => {
+    buddy.classList.add("is-sleeping");
+    faceRest?.(true);
+  }, SLEEP_AFTER);
+}
+const onActivity = () => {
+  const now = performance.now();
+  if (now - lastActivity < 400 && !buddy.classList.contains("is-sleeping")) return;
+  lastActivity = now;
+  wakeBuddy();
+};
+for (const type of ["pointermove", "pointerdown", "keydown", "scroll"]) {
+  addEventListener(type, onActivity, { passive: true });
+}
+wakeBuddy();
+
+let hiddenAt = 0;
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    hiddenAt = Date.now();
+    return;
+  }
+  if (hiddenAt && Date.now() - hiddenAt > 5000 && buddyOnScreen) {
+    buddy.classList.remove("is-sleeping");
+    faceRest?.(false);
+    buddyWiggle();
+    buddySay("oh, you're back!");
+  }
+});
+
+// The face (closed eyes, cheeks, mouth) leans a few units toward the cursor on a spring.
+function trackFace(m) {
+  if (reduceMotion || !matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+  const fx = m.springValue(0, { stiffness: 170, damping: 16 });
+  const fy = m.springValue(0, { stiffness: 170, damping: 16 });
+  m.styleEffect(buddyFace, { x: fx, y: fy });
+  faceRest = (asleep) => {
+    fx.set(0);
+    fy.set(asleep ? 3 : 0);
+  };
+  addEventListener("pointermove", (e) => {
+    if (!buddyOnScreen || buddy.classList.contains("is-sleeping")) return;
+    const r = buddy.getBoundingClientRect();
+    const dx = e.clientX - (r.left + r.width / 2);
+    const dy = e.clientY - (r.top + r.height / 2);
+    const d = Math.hypot(dx, dy) || 1;
+    const reach = Math.min(1, d / 260);
+    fx.set((dx / d) * reach * 7);
+    fy.set((dy / d) * reach * 4);
+  }, { passive: true });
+}
+
+// Bricks fall from the top of the sky, bounce on the grass and pile up two high.
+const brickColors = ["#e8584a", "#f5cd30", "#0d69ac", "#6cbf4a", "#9b7be8", "#f2b1c5"];
+const brickSvg = (fill) =>
+  `<svg viewBox="0 0 76 54"><g fill="${fill}" stroke="#1b2a35" stroke-width="4" stroke-linejoin="round"><rect x="13" y="3" width="18" height="11" rx="3"/><rect x="45" y="3" width="18" height="11" rx="3"/><rect x="2" y="12" width="72" height="40" rx="6"/></g><rect x="8" y="17" width="26" height="4" rx="2" fill="#fff" opacity=".45"/></svg>`;
+const bounceOut = (t) => {
+  const n = 7.5625, d = 2.75;
+  if (t < 1 / d) return n * t * t;
+  if (t < 2 / d) return n * (t -= 1.5 / d) * t + 0.75;
+  if (t < 2.5 / d) return n * (t -= 2.25 / d) * t + 0.9375;
+  return n * (t -= 2.625 / d) * t + 0.984375;
+};
+const MAX_BRICKS = 30;
+let rain = null;
+const rainStacks = new Map();
+let rainCount = 0;
+
+function rainBricks(count) {
+  if (rainCount >= MAX_BRICKS) return false;
+  const world = document.querySelector(".world");
+  const ground = document.querySelector(".ground");
+  if (!rain) {
+    rain = el("div", { class: "brick-rain", "aria-hidden": "true" });
+    world.append(rain);
+  }
+  const colWidth = 44;
+  const cols = Math.max(1, Math.floor(world.clientWidth / colWidth));
+  const groundTop = ground.offsetTop;
+  for (let i = 0; i < count && rainCount < MAX_BRICKS; i++) {
+    let col = -1;
+    for (let tries = 0; tries < 8; tries++) {
+      const c = Math.floor(Math.random() * cols);
+      if ((rainStacks.get(c) ?? 0) < 2) { col = c; break; }
+    }
+    if (col < 0) break;
+    const level = rainStacks.get(col) ?? 0;
+    rainStacks.set(col, level + 1);
+    rainCount++;
+
+    const brick = el("span", { class: "rain-brick" });
+    brick.innerHTML = brickSvg(brickColors[Math.floor(Math.random() * brickColors.length)]);
+    brick.style.left = `${col * colWidth + Math.random() * 6}px`;
+    rain.append(brick);
+
+    const startY = -50 - Math.random() * 140;
+    const landY = groundTop - 25 - level * 23 + 3;
+    const duration = 0.65 + (landY - startY) / 1800;
+    const delay = i * 0.07 + Math.random() * 0.12;
+    motion.animate(brick, { y: [startY, landY] }, { duration, delay, ease: bounceOut });
+    motion.animate(brick,
+      { rotate: [(Math.random() - 0.5) * 240, (Math.random() - 0.5) * (level ? 10 : 24)] },
+      { duration: duration * 0.75, delay, ease: "easeOut" });
+  }
+  return true;
+}
 
 // ---------- Games ----------
 
@@ -321,7 +447,8 @@ if (shown.length === 0) {
 function renderGame(g) {
   const live = roblox?.games?.[String(g.placeId)] ?? {};
   const title = g.title || live.name || "Untitled game";
-  const image = g.screenshots?.[0] || live.thumbnails?.[0] || live.icon;
+  const shots = [...new Set([...(g.screenshots ?? []), ...(live.thumbnails ?? [])])];
+  const image = shots[0] || live.icon;
   const url = g.url || live.url;
   const status = g.status || "In development";
   const isLive = status === "Live";
@@ -329,28 +456,191 @@ function renderGame(g) {
   const statusClass = isLive ? "tag-live" : isRetired ? "tag-retired" : "tag-dev";
   const roles = [g.role ?? []].flat();
 
-  const tags = [
+  const tags = () => [
     el("li", { class: `tag-status ${statusClass}` }, el("span", { class: "status-dot", "aria-hidden": "true" }), status),
     g.duo ? el("li", { class: "tag-friend" }, "Built with a friend") : null,
     ...roles.map((r) => el("li", { class: `tag-${roleArea[r.toLowerCase()] ?? "other"}` }, r)),
   ];
+  const play = () =>
+    url && (isLive || isRetired) ? el("a", { href: url, target: "_blank", rel: "noopener", class: "game-play" }, `Play ${title} on Roblox`) : null;
 
   const stats = [];
   // Brand-new games show no count until it means something.
   if (live.visits >= 100) stats.push(`${compact.format(live.visits)} visits`);
   if (live.playing) stats.push(`${fmt.format(live.playing)} playing now`);
 
+  // Games with pictures open into a bigger view; the rest wait for screenshots.
+  let media;
+  if (image) {
+    media = el("button", { type: "button", class: "game-media game-open", "aria-haspopup": "dialog", "aria-label": `See more of ${title}` },
+      fadeIn(el("img", { src: image, alt: "", loading: "lazy" })));
+    media.addEventListener("click", () =>
+      openSheet({ title, blurb: g.blurb, shots: shots.length ? shots : [image], live, tags, play }, media));
+  } else {
+    media = el("div", { class: "game-media" }, el("span", { class: "game-media-empty" }, "Screenshots soon"));
+  }
+
   return el("article", { class: "game" },
-    el("div", { class: "game-media" },
-      image
-        ? el("img", { src: image, alt: `${title} screenshot`, loading: "lazy" })
-        : el("span", { class: "game-media-empty" }, "Screenshots soon")),
+    media,
     el("h3", {}, title),
-    el("ul", { class: "game-tags" }, tags),
+    el("ul", { class: "game-tags" }, tags()),
     g.blurb ? el("p", {}, g.blurb) : null,
     stats.length ? el("p", { class: "game-stats" }, stats.join(", ")) : null,
-    url && (isLive || isRetired) ? el("a", { href: url, target: "_blank", rel: "noopener", class: "game-play" }, `Play ${title} on Roblox`) : null
+    play()
   );
+}
+
+// Pictures fade up from a soft blur once they've loaded, instead of popping in.
+function fadeIn(img) {
+  img.classList.add("fade-img");
+  const done = () => img.classList.add("is-loaded");
+  if (img.complete && img.naturalWidth) done();
+  else {
+    img.addEventListener("load", done, { once: true });
+    img.addEventListener("error", done, { once: true });
+  }
+  return img;
+}
+
+// ---------- Game sheet ----------
+// A game card's picture lifts off the card and grows into a bigger view with every
+// screenshot, the full stats and the play button; closing flies it back. The flying
+// picture is a stand-in ("ghost") so the real ones never stretch.
+
+let sheet = null;
+
+function getSheet() {
+  if (sheet) return sheet;
+  const dialog = el("dialog", { class: "sheet", "aria-labelledby": "sheet-title" });
+  const close = el("button", { type: "button", class: "sheet-close", "aria-label": "Close" }, "×");
+  const img = el("img", { class: "sheet-img", alt: "" });
+  const media = el("div", { class: "sheet-media" }, img);
+  const thumbs = el("div", { class: "sheet-thumbs", role: "group", "aria-label": "Screenshots" });
+  const body = el("div", { class: "sheet-body" });
+  const panel = el("div", { class: "sheet-panel" }, close, media, thumbs, body);
+  const ghost = el("img", { class: "sheet-ghost", alt: "", "aria-hidden": "true" });
+  dialog.append(panel, ghost);
+  document.body.append(dialog);
+
+  close.addEventListener("click", closeSheet);
+  dialog.addEventListener("cancel", (e) => {
+    e.preventDefault();
+    closeSheet();
+  });
+  dialog.addEventListener("click", (e) => {
+    if (e.target === dialog) closeSheet();
+  });
+  sheet = { dialog, panel, media, img, thumbs, body, ghost, opener: null, token: 0, closing: false };
+  return sheet;
+}
+
+function openSheet(info, opener) {
+  const s = getSheet();
+  if (s.dialog.open) return;
+  s.opener = opener;
+  s.closing = false;
+  const token = ++s.token;
+
+  const show = (i) => {
+    s.img.src = info.shots[i];
+    s.img.alt = `${info.title} screenshot ${i + 1} of ${info.shots.length}`;
+    for (const [j, t] of [...s.thumbs.children].entries()) t.setAttribute("aria-pressed", String(i === j));
+  };
+  s.thumbs.replaceChildren(...(info.shots.length > 1 ? info.shots.map((src, i) => {
+    const t = el("button", { type: "button", "aria-label": `Screenshot ${i + 1}` }, el("img", { src, alt: "" }));
+    t.addEventListener("click", () => {
+      show(i);
+      // The picture has visibly landed by now even if its spring is still settling.
+      if (!s.closing) {
+        s.media.style.visibility = "";
+        s.ghost.style.visibility = "hidden";
+      }
+    });
+    return t;
+  }) : []));
+  show(0);
+
+  const live = info.live;
+  const stats = [
+    live.visits >= 100 ? ["Visits", fmt.format(live.visits)] : null,
+    live.favorites >= 10 ? ["Favorites", fmt.format(live.favorites)] : null,
+    live.playing ? ["Playing now", fmt.format(live.playing)] : null,
+  ].filter(Boolean);
+  s.body.replaceChildren(...[
+    el("h3", { id: "sheet-title" }, info.title),
+    el("ul", { class: "game-tags" }, info.tags()),
+    info.blurb ? el("p", {}, info.blurb) : null,
+    stats.length ? el("dl", { class: "sheet-stats" }, stats.map(([k, v]) => el("div", {}, el("dt", {}, k), el("dd", {}, v)))) : null,
+    info.play(),
+  ].filter(Boolean));
+
+  s.dialog.showModal();
+  s.panel.scrollTop = 0;
+  requestAnimationFrame(() => s.dialog.classList.add("is-open"));
+  if (!motion || reduceMotion) return;
+
+  const from = opener.getBoundingClientRect();
+  const to = s.media.getBoundingClientRect();
+  placeGhost(s, to, opener.querySelector("img").currentSrc || info.shots[0]);
+  s.media.style.visibility = "hidden";
+  opener.style.visibility = "hidden";
+
+  motion.animate(s.panel, { opacity: [0, 1], y: [14, 0] }, { duration: 0.22, ease: "easeOut" });
+  motion.animate(s.ghost,
+    { x: [from.left - to.left, 0], y: [from.top - to.top, 0], scale: [from.width / to.width, 1] },
+    { type: "spring", visualDuration: 0.42, bounce: 0.18 }
+  ).then(() => {
+    if (s.token !== token) return;
+    s.media.style.visibility = "";
+    s.ghost.style.visibility = "hidden";
+  });
+}
+
+function placeGhost(s, rect, src) {
+  s.ghostBox = rect;
+  Object.assign(s.ghost.style, {
+    visibility: "visible",
+    left: `${rect.left}px`,
+    top: `${rect.top}px`,
+    width: `${rect.width}px`,
+    height: `${rect.height}px`,
+  });
+  s.ghost.src = src;
+  motion.animate(s.ghost, { x: 0, y: 0, scale: 1 }, { duration: 0 });
+}
+
+function closeSheet() {
+  const s = sheet;
+  if (!s || !s.dialog.open || s.closing) return;
+  const opener = s.opener;
+  const token = ++s.token;
+  const done = () => {
+    s.dialog.close();
+    s.closing = false;
+    s.media.style.visibility = "";
+    s.ghost.style.visibility = "hidden";
+    opener.style.visibility = "";
+    opener.focus({ preventScroll: true });
+  };
+  s.dialog.classList.remove("is-open");
+  if (!motion || reduceMotion) return done();
+
+  s.closing = true;
+  // If the picture already landed, take off from wherever it sits now (the panel may
+  // have scrolled). If it's still flying in, turn it around mid-air.
+  if (s.ghost.style.visibility === "hidden") placeGhost(s, s.media.getBoundingClientRect(), s.img.currentSrc);
+  s.media.style.visibility = "hidden";
+  const from = opener.getBoundingClientRect();
+  const box = s.ghostBox;
+
+  motion.animate(s.panel, { opacity: 0 }, { duration: 0.15, ease: "easeIn" });
+  motion.animate(s.ghost,
+    { x: from.left - box.left, y: from.top - box.top, scale: from.width / box.width },
+    // A tween rather than a spring so the page unlocks the moment it visibly lands.
+    { duration: 0.32, ease: [0.32, 0.72, 0, 1] }
+  ).then(() => {
+    if (s.token === token) done();
+  });
 }
 
 // ---------- Builds ----------
@@ -360,7 +650,7 @@ $("builds-section").hidden = shownBuilds.length === 0;
 $("builds").replaceChildren(
   ...shownBuilds.map((b) =>
     el("figure", { class: "build" },
-      el("img", { src: b.image, alt: b.alt || b.title, loading: "lazy" }),
+      fadeIn(el("img", { src: b.image, alt: b.alt || b.title, loading: "lazy" })),
       el("figcaption", {},
         el("strong", {}, b.title),
         b.game ? ` for ${b.game}` : null,
@@ -438,6 +728,93 @@ if ("IntersectionObserver" in window) {
     });
   };
   window.addEventListener("scroll", catchUp, { passive: true });
+}
+
+// ---------- Stacking plates and dropping headings ----------
+// Once Motion is in and the intro is over: each plate below the fold waits a little low,
+// then clicks up into the plate above as it scrolls in, and each section heading drops
+// in letter by letter like loose bricks. Both play once. Anything the visitor jumps
+// straight past is put in place without animating, so there's never a hole.
+
+const unsettled = new Map();
+let settleQueued = false;
+addEventListener("scroll", () => {
+  if (settleQueued || unsettled.size === 0) return;
+  settleQueued = true;
+  requestAnimationFrame(() => {
+    settleQueued = false;
+    for (const [node, settle] of unsettled) {
+      if (node.getBoundingClientRect().bottom > 0) continue;
+      unsettled.delete(node);
+      settle();
+    }
+  });
+}, { passive: true });
+
+Promise.all([motionReady, introDone]).then(([m]) => {
+  if (!m) return;
+  trackFace(m);
+  if (reduceMotion) return;
+  stackPlates(m);
+  dropHeadings(m);
+});
+
+function stackPlates(m) {
+  const DROP = 36;
+  for (const plate of document.querySelectorAll(".plate:not([hidden])")) {
+    if (plate.getBoundingClientRect().top < innerHeight) continue;
+    plate.style.transform = `translateY(${DROP}px)`;
+    const stop = m.inView(plate, () => {
+      unsettled.delete(plate);
+      m.animate(plate, { y: [DROP, 0] }, { type: "spring", visualDuration: 0.5, bounce: 0.35 })
+        .then(() => (plate.style.transform = ""));
+    }, { margin: "0px 0px -8% 0px" });
+    unsettled.set(plate, () => {
+      stop();
+      plate.style.transform = "";
+    });
+  }
+}
+
+function dropHeadings(m) {
+  for (const h of document.querySelectorAll("main h2")) {
+    if (h.closest("[hidden]") || h.getBoundingClientRect().top < innerHeight) continue;
+    const letters = splitLetters(h);
+    for (const l of letters) l.style.opacity = "0";
+    const lift = parseFloat(getComputedStyle(h).fontSize) * 0.9;
+    const stop = m.inView(h, () => {
+      unsettled.delete(h);
+      letters.forEach((l, i) => {
+        const delay = 0.08 + i * 0.03;
+        m.animate(l,
+          { opacity: [0, 1], y: [-lift, 0], rotate: [(Math.random() - 0.5) * 36, 0] },
+          { type: "spring", visualDuration: 0.4, bounce: 0.5, delay, opacity: { duration: 0.1, delay } });
+      });
+    }, { margin: "0px 0px -15% 0px" });
+    unsettled.set(h, () => {
+      stop();
+      for (const l of letters) l.style.opacity = "";
+    });
+  }
+}
+
+// Screen readers get the heading as one word-run; the letters are for show.
+function splitLetters(node) {
+  const text = node.textContent.trim();
+  const shown = el("span", { "aria-hidden": "true" });
+  const letters = [];
+  text.split(/\s+/).forEach((word, i) => {
+    if (i) shown.append(" ");
+    const w = el("span", { class: "split-word" });
+    for (const ch of word) {
+      const l = el("span", { class: "split-letter" }, ch);
+      letters.push(l);
+      w.append(l);
+    }
+    shown.append(w);
+  });
+  node.replaceChildren(el("span", { class: "sr-only" }, text), shown);
+  return letters;
 }
 
 // ---------- Footer ----------

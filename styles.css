@@ -56,7 +56,20 @@ a:hover { text-decoration-thickness: 2px; }
 :focus-visible {
   outline: 3px solid var(--bright-blue);
   outline-offset: 3px;
-  border-radius: 2px;
+}
+/* Links have no radius of their own, so give their ring a soft corner. Everything else
+   keeps its own shape and the ring follows it. */
+a:focus-visible { border-radius: 3px; }
+
+::selection { background: var(--bright-yellow); color: var(--ink); }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .skip {
@@ -102,6 +115,7 @@ html.intro-shrink body::before { clip-path: inset(0 0 var(--sky-cut, 0px) 0); }
 html.intro-out body::before { opacity: 0; }
 
 html.intro .buddy { z-index: 60; animation: none; }
+html.intro .buddy-zzz { display: none; }
 html.intro:not(.intro-ready) .buddy { visibility: hidden; }
 html.intro .drop { visibility: hidden; }
 /* Falling pieces sit in front of the intro sky so the whole fall is seen. */
@@ -610,7 +624,7 @@ p { margin: 0 0 1rem; max-width: 62ch; }
 .game-tags .tag-visual { --tag-bg: var(--area-visual); }
 .game-tags .tag-lead   { --tag-bg: var(--area-lead); }
 
-.game-stats { color: var(--muted); font-size: 0.95rem; }
+.game-stats { color: var(--muted); font-size: 0.95rem; font-variant-numeric: tabular-nums; }
 
 .empty {
   border-radius: var(--radius);
@@ -935,11 +949,6 @@ p { margin: 0 0 1rem; max-width: 62ch; }
   transform-origin: 50% 50%;
   transition: transform 550ms var(--spring), box-shadow 200ms var(--ease-out), background-color 160ms ease;
 }
-/* Clip swaps dip to black and back (main.js toggles .is-swapping). */
-.skill-clip video {
-  transition: transform 550ms var(--spring), box-shadow 200ms var(--ease-out), filter 140ms var(--ease-out);
-}
-.skill-clip video.is-swapping { filter: brightness(0); }
 @media (hover: hover) and (pointer: fine) {
   .agents li:hover,
   .pipeline .brick:hover,
@@ -990,6 +999,201 @@ p { margin: 0 0 1rem; max-width: 62ch; }
 }
 .hero-links .copy { transition: transform 550ms var(--spring); }
 
+
+/* ---------- Cloud buddy asleep ---------- */
+/* Three z's float up and fade, one after another, while nobody's around. */
+.buddy-zzz {
+  position: absolute;
+  left: 8%;
+  top: 4%;
+  pointer-events: none;
+  font: 800 1rem/1 var(--font);
+  color: var(--ink);
+}
+.buddy-zzz span {
+  position: absolute;
+  opacity: 0;
+}
+.buddy.is-sleeping .buddy-zzz span { animation: snooze 2.4s var(--ease-out) infinite; }
+.buddy-zzz span:nth-child(2) { font-size: 0.8em; animation-delay: 0.8s !important; }
+.buddy-zzz span:nth-child(3) { font-size: 0.65em; animation-delay: 1.6s !important; }
+@keyframes snooze {
+  0% { opacity: 0; transform: translate(0, 0) rotate(-10deg); }
+  20% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-18px, -34px) rotate(8deg); }
+}
+
+/* ---------- Brick rain (poke the buddy ten times) ---------- */
+.brick-rain {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 2;
+}
+.rain-brick {
+  position: absolute;
+  top: 0;
+  width: 38px;
+  transform: translateY(-300px);
+}
+.rain-brick svg { display: block; width: 100%; }
+
+/* ---------- Stacking plates ---------- */
+/* Each plate's dark side runs down behind the plate below it. It's hidden once they're
+   stacked, and shows as the gap while a plate clicks up into place. */
+.plate:not(:last-of-type)::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 48px;
+  background: linear-gradient(var(--plate-edge), color-mix(in srgb, var(--plate-edge), var(--black) 30%));
+  z-index: -1;
+}
+
+/* Section headings split into letters (main.js) so they can drop in one by one. */
+.split-word { display: inline-block; white-space: nowrap; }
+.split-letter { display: inline-block; }
+
+/* ---------- Game cards open into a sheet ---------- */
+button.game-media {
+  display: block;
+  width: 100%;
+  padding: 0;
+  font: inherit;
+  cursor: zoom-in;
+}
+/* Pictures fade up from a soft blur once loaded. */
+.fade-img {
+  opacity: 0;
+  filter: blur(10px);
+  transition: opacity 400ms var(--ease-out), filter 500ms var(--ease-out);
+}
+.fade-img.is-loaded { opacity: 1; filter: none; }
+
+html:has(.sheet[open]) { overflow: hidden; }
+.sheet {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: var(--gutter);
+  border: 0;
+  background: none;
+  color: var(--ink);
+}
+.sheet[open] { display: grid; place-items: center; }
+.sheet::backdrop {
+  background: rgb(27 42 53 / 0.55);
+  opacity: 0;
+  transition: opacity 250ms var(--ease-out);
+}
+.sheet.is-open::backdrop { opacity: 1; }
+.sheet-panel {
+  position: relative;
+  width: min(54rem, 100%);
+  max-height: 100%;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: clamp(1rem, 3vw, 1.75rem);
+  background: var(--paper);
+  border: 3px solid var(--black);
+  border-radius: var(--radius-lg);
+  box-shadow: 8px 8px 0 var(--black);
+}
+.sheet-close {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  z-index: 1;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 2px solid var(--black);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--ink);
+  font: 700 1.5rem/1 var(--font);
+  cursor: pointer;
+  box-shadow: 3px 3px 0 var(--black);
+  transition: transform 550ms var(--spring), box-shadow 200ms var(--ease-out);
+}
+.sheet-close:active { transform: scale(0.92); transition-duration: 100ms; }
+.sheet-media img,
+.sheet-ghost {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border: 2px solid var(--black);
+  border-radius: var(--radius);
+  background: var(--medium-stone-grey);
+}
+.sheet-ghost {
+  position: fixed;
+  margin: 0;
+  transform-origin: 0 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.sheet-thumbs {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  overflow-x: auto;
+  padding: 0 4px 6px 0;
+}
+.sheet-thumbs:empty { display: none; }
+.sheet-thumbs button {
+  flex: none;
+  width: 7rem;
+  padding: 0;
+  border: 2px solid var(--black);
+  border-radius: calc(var(--radius) - 2px);
+  overflow: hidden;
+  background: var(--medium-stone-grey);
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 160ms ease, box-shadow 160ms var(--ease-out), transform 160ms var(--ease-out);
+}
+.sheet-thumbs button[aria-pressed="true"] { opacity: 1; box-shadow: 3px 3px 0 var(--black); transform: translate(-1px, -1px); }
+.sheet-thumbs img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+@media (hover: hover) and (pointer: fine) {
+  .sheet-thumbs button:hover { opacity: 1; }
+  .sheet-close:hover { transform: scale(1.06) rotate(90deg); box-shadow: 4px 4px 0 var(--black); }
+}
+.sheet-body { margin-top: 1.25rem; }
+.sheet-body h3 {
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  font-weight: 850;
+  font-variation-settings: "wdth" 115;
+}
+.sheet-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0.5rem 0 1.25rem;
+}
+.sheet-stats div {
+  padding: 0.6rem 0.9rem;
+  background: var(--bright-yellow);
+  border: 2px solid var(--black);
+  border-radius: var(--radius);
+  box-shadow: 4px 4px 0 var(--black);
+}
+.sheet-stats dt { font-size: 0.8rem; font-weight: 650; }
+.sheet-stats dd {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 850;
+  line-height: 1.1;
+  font-variation-settings: "wdth" 112;
+  font-variant-numeric: tabular-nums;
+}
+.sheet .game-play { margin-top: 0.25rem; }
+
 h1, h2, h3 { text-wrap: balance; }
 p, li { text-wrap: pretty; }
 
@@ -1005,7 +1209,6 @@ p, li { text-wrap: pretty; }
   .contact-links a:hover, .contact-links .copy:hover, .clip-tabs button:hover, .game-play:hover,
   .contact-links a:active, .contact-links .copy:active, .clip-tabs button:active, .game-play:active,
   .hero-links .copy:active { transform: none; }
-  .skill-clip video.is-swapping { filter: none; }
   .js .pipeline li.reveal::after { transform: none; }
   .jobs li:hover::before { transform: translateY(0.1rem); }
   /* Reveals keep a short fade but drop the movement. */
@@ -1013,5 +1216,10 @@ p, li { text-wrap: pretty; }
   .js .reveal.is-in { transition: opacity 200ms ease; transition-delay: 0ms; }
   .buddy,
   .buddy.is-awake .buddy-art,
-  .status-dot::after { animation: none; }
+  .status-dot::after,
+  .buddy.is-sleeping .buddy-zzz span { animation: none; }
+  .buddy.is-sleeping .buddy-zzz span { opacity: 1; transform: translate(calc(var(--z, 0) * -10px), calc(var(--z, 0) * -12px)); }
+  .buddy-zzz span:nth-child(2) { --z: 1; }
+  .buddy-zzz span:nth-child(3) { --z: 2; }
+  .fade-img, .sheet::backdrop, .sheet-close, .sheet-thumbs button { transition: none; }
 }
