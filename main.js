@@ -63,7 +63,12 @@ if (site) {
   $("name").textContent = site.name;
   $("tagline").textContent = site.tagline;
 
-  $("hero-links").replaceChildren(...site.links.map(linkNode));
+  // While commissions are open, the hero leads with a way to hire me.
+  const hire = site.commissions?.open
+    ? el("a", { class: "hero-cta", href: "#commissions" },
+        el("span", { class: "status-dot", "aria-hidden": "true" }), "Open for commissions")
+    : null;
+  $("hero-links").replaceChildren(...[hire, ...site.links.map(linkNode)].filter(Boolean));
 }
 
 if (roblox?.avatar) {
@@ -477,7 +482,7 @@ function renderGame(g) {
     media.addEventListener("click", () =>
       openSheet({ title, blurb: g.blurb, shots: shots.length ? shots : [image], live, tags, play }, media));
   } else {
-    media = el("div", { class: "game-media" }, el("span", { class: "game-media-empty" }, "Screenshots soon"));
+    media = el("div", { class: "game-media" }, el("span", { class: "game-media-empty" }, el("span", {}, "Screenshots soon")));
   }
 
   return el("article", { class: "game" },
@@ -677,10 +682,12 @@ if (site) {
 }
 
 // ---------- Scroll reveal ----------
-// Cards drop in once as they first scroll into view, staggered within each group.
+// The pipeline bricks drop in one after another the first time they scroll into view,
+// because they're a real sequence. Other cards don't: their plate and heading already
+// make the entrance.
 // Cards already on screen at load show immediately (no animation on first paint).
 
-const revealGroups = [".skills > .skill", ".jobs", ".agents > li", ".pipeline > li", "#games > .game", "#builds > .build"];
+const revealGroups = [".pipeline > li"];
 if ("IntersectionObserver" in window) {
   const seen = new IntersectionObserver((entries) => {
     for (const e of entries) {
