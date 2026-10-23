@@ -1,15 +1,15 @@
 {
-  "updated": "2026-10-22T10:46:32.305Z",
-  "avatar": "https://tr.rbxcdn.com/30DAY-AvatarHeadshot-820B3E8C7800AEBE1850D537122C8EFB-Png/420/420/AvatarHeadshot/Png/noFilter",
-  "totalVisits": 37793,
+  "updated": "2026-10-23T10:37:54.612Z",
+  "avatar": "https://tr.rbxcdn.com/30DAY-AvatarHeadshot-8AC3B15E2C1B8394552D4F5581D8CAAA-Png/420/420/AvatarHeadshot/Png/noFilter",
+  "totalVisits": 38269,
   "gameCount": 4,
   "games": {
     "139369528722370": {
       "name": "Pull a Planet🪐 ",
       "creator": "OGU Games",
-      "visits": 29135,
+      "visits": 29144,
       "playing": 0,
-      "favorites": 862,
+      "favorites": 861,
       "created": "2026-09-21T00:12:32.429Z",
       "updated": "2026-10-13T16:17:00.829Z",
       "url": "https://www.roblox.com/games/139369528722370",
@@ -23,7 +23,7 @@
     "78767891782862": {
       "name": "Chop a Verity",
       "creator": "OGU Games",
-      "visits": 2424,
+      "visits": 2426,
       "playing": 0,
       "favorites": 7,
       "created": "2026-10-11T22:57:11.661Z",
@@ -37,19 +37,20 @@
       ]
     },
     "98274682493735": {
-      "name": "+1 Throw a Cube",
+      "name": "[W3] +1 Throw a Cube",
       "creator": "OGU Games",
-      "visits": 415,
-      "playing": 0,
-      "favorites": 4,
+      "visits": 880,
+      "playing": 6,
+      "favorites": 3,
       "created": "2026-10-03T01:24:21.45Z",
-      "updated": "2026-10-22T04:44:32.566Z",
+      "updated": "2026-10-23T10:26:22.245Z",
       "url": "https://www.roblox.com/games/98274682493735",
       "icon": "https://tr.rbxcdn.com/180DAY-b0a03a72fc9332de0a4d1be5ad2d6614/512/512/Image/Png/noFilter",
       "thumbnails": [
-        "https://tr.rbxcdn.com/180DAY-d7a667ccd97f2105a96af4fa4c2dd175/768/432/Image/Png/noFilter",
-        "https://tr.rbxcdn.com/180DAY-fd1bd301f7138ad4786a475c3de48f4f/768/432/Image/Png/noFilter",
-        "https://tr.rbxcdn.com/180DAY-5d57998683d43ec520b752ed1c615d83/768/432/Image/Png/noFilter"
+        "https://tr.rbxcdn.com/180DAY-d7f45f955662db7c7182d210731c1ac3/768/432/Image/Png/noFilter",
+        "https://tr.rbxcdn.com/180DAY-be0d95916b55eada18d5271cf035182b/768/432/Image/Png/noFilter",
+        "https://tr.rbxcdn.com/180DAY-36a7a4d2ef2cc48099bf6f4ec6ef7ec3/768/432/Image/Png/noFilter",
+        "https://tr.rbxcdn.com/180DAY-d7a667ccd97f2105a96af4fa4c2dd175/768/432/Image/Png/noFilter"
       ]
     },
     "113313528790663": {
